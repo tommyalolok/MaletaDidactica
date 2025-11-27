@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Discalculia - Maleta Didáctica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ff7675 0%, #d63031 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: #d63031;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .grade-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .grade-btn {
+            background: #d63031;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .grade-btn:hover, .grade-btn.active {
+            background: #c23616;
+            transform: translateY(-2px);
+        }
+
+        .activity-content {
+            display: none;
+        }
+
+        .activity-content.active {
+            display: block;
+        }
+
+        .activity-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #d63031;
+        }
+
+        .activity-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .objective {
+            background: #ffeaa7;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #fdcb6e;
+        }
+
+        .exercise {
+            margin-bottom: 25px;
+        }
+
+        .exercise h4 {
+            color: #d63031;
+            margin-bottom: 15px;
+        }
+
+        .number-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .number-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            text-align: center;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .input-field.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .input-field.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .option {
+            padding: 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #d63031;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            margin: 10px 0;
+        }
+
+        .text-area.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .text-area.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .error-list li {
+            margin: 8px 0;
+            color: #721c24;
+        }
+
+        .correct-answer {
+            color: #155724;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background: #d1ecf1;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border: 2px solid #bee5eb;
+        }
+
+        .survey-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .survey-btn.yes {
+            background: #28a745;
+            color: white;
+        }
+
+        .survey-btn.no {
+            background: #6c757d;
+            color: white;
+        }
+
+        .survey-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .retry-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .retry-btn:hover {
+            background: #e0a800;
+        }
+
+        .instruction {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .number-circle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border: 2px solid #d63031;
+            border-radius: 50%;
+            margin: 0 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .number-circle:hover {
+            background: #ffeaa7;
+        }
+
+        .number-circle.selected {
+            background: #d63031;
+            color: white;
+        }
+
+        .number-circle.correct {
+            background: #28a745;
+            border-color: #28a745;
+            color: white;
+        }
+
+        .number-circle.incorrect {
+            background: #dc3545;
+            border-color: #dc3545;
+            color: white;
+        }
+
+        .fraction {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        .measurement-options {
+            display: flex;
+            gap: 10px;
+            margin: 10px 0;
+        }
+
+        .measurement-option {
+            padding: 8px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .measurement-option:hover {
+            border-color: #d63031;
+        }
+
+        .measurement-option.selected {
+            background: #e3f2fd;
+            border-color: #d63031;
+        }
+
+        .measurement-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .measurement-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .number-line {
+            height: 40px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .number-point {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: #d63031;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            cursor: pointer;
+        }
+
+        .number-label {
+            position: absolute;
+            top: 25px;
+            transform: translateX(-50%);
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ejercicios de Discalculia</h1>
+            <p>Actividades para mejorar las habilidades matemáticas</p>
+        </header>
+
+        <a href="../index.html" class="back-btn">← Volver al Inicio</a>
+
+        <!-- Selector de Grado -->
+        <div class="grade-selector">
+            <div class="grade-btn active" data-grade="3">3° Básico</div>
+            <div class="grade-btn" data-grade="4">4° Básico</div>
+            <div class="grade-btn" data-grade="5">5° Básico</div>
+            <div class="grade-btn" data-grade="6">6° Básico</div>
+        </div>
+
+        <!-- 3° Básico -->
+        <div id="grade-3" class="activity-content active">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Discalculia 3° Básico - Guía 1">
+                <h3>Guía 1: Discalculia - 3° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Números confundidos"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Reconocer y diferenciar números visualmente parecidos (inversión o confusión de cifras).
+                    </div>
+                    
+                    <p class="instruction">Rodea con un círculo el número correcto según el modelo:</p>
+                    
+                    <div class="options-group">
+                        <div class="option">
+                            <p>Modelo: 21 →</p>
+                            <div class="measurement-options">
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">12</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="true">21</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">22</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>Modelo: 304 →</p>
+                            <div class="measurement-options">
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">340</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="true">304</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">403</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>Modelo: 57 →</p>
+                            <div class="measurement-options">
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">75</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="true">57</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">55</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>Modelo: 406 →</p>
+                            <div class="measurement-options">
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">604</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">460</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="true">406</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>Modelo: 89 →</p>
+                            <div class="measurement-options">
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">98</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="true">89</div>
+                                <div class="number-circle" onclick="selectNumber(this)" data-correct="false">88</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Escribe con letra los números correctos:</p>
+                        <div class="number-list">
+                            <div class="number-item">
+                                <label>21:</label>
+                                <input type="text" class="input-field" placeholder="veintiuno" data-correct="veintiuno">
+                            </div>
+                            <div class="number-item">
+                                <label>304:</label>
+                                <input type="text" class="input-field" placeholder="trescientos cuatro" data-correct="trescientos cuatro">
+                            </div>
+                            <div class="number-item">
+                                <label>57:</label>
+                                <input type="text" class="input-field" placeholder="cincuenta y siete" data-correct="cincuenta y siete">
+                            </div>
+                            <div class="number-item">
+                                <label>406:</label>
+                                <input type="text" class="input-field" placeholder="cuatrocientos seis" data-correct="cuatrocientos seis">
+                            </div>
+                            <div class="number-item">
+                                <label>89:</label>
+                                <input type="text" class="input-field" placeholder="ochenta y nueve" data-correct="ochenta y nueve">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Discalculia 3° Básico - Guía 2">
+                <h3>Guía 2: Discalculia - 3° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Orden de números"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Ordenar números del menor al mayor y reconocer secuencias simples.
+                    </div>
+                    
+                    <p class="instruction">Escribe los números en orden del más chico al más grande:</p>
+                    
+                    <div class="number-list">
+                        <div class="number-item">
+                            <label>8 - 3 - 5 - 9 - 1</label>
+                            <input type="text" class="input-field" placeholder="Ej: 1, 3, 5, 8, 9" data-correct="1, 3, 5, 8, 9">
+                        </div>
+                        <div class="number-item">
+                            <label>24 - 21 - 27 - 22</label>
+                            <input type="text" class="input-field" placeholder="Ej: 21, 22, 24, 27" data-correct="21, 22, 24, 27">
+                        </div>
+                        <div class="number-item">
+                            <label>305 - 301 - 310 - 300</label>
+                            <input type="text" class="input-field" placeholder="Ej: 300, 301, 305, 310" data-correct="300, 301, 305, 310">
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Dibuja una recta numérica y marca los números del ejercicio 2:</p>
+                        <div class="number-line" id="number-line-1">
+                            <!-- Los puntos se agregarán con JavaScript -->
+                        </div>
+                        <p>Arrastra los puntos a la posición correcta en la recta numérica:</p>
+                        <div class="measurement-options">
+                            <div class="number-point" data-value="21" style="left: 10%;">21</div>
+                            <div class="number-point" data-value="22" style="left: 30%;">22</div>
+                            <div class="number-point" data-value="24" style="left: 50%;">24</div>
+                            <div class="number-point" data-value="27" style="left: 70%;">27</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(3)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-3"></div>
+            
+            <!-- Mensaje de finalización -->
+            <div class="completion-message" id="completion-message-3">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-3"></p>
+                <p>¿Te gustaría completar la encuesta de satisfacción?</p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('discalculia', 3)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4° Básico -->
+        <div id="grade-4" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Discalculia 4° Básico - Guía 1">
+                <h3>Guía 1: Discalculia - 4° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Símbolos confundidos"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Diferenciar los signos de suma, resta y multiplicación.
+                    </div>
+                    
+                    <p class="instruction">Rodea el signo correcto según la frase:</p>
+                    
+                    <div class="options-group">
+                        <div class="option">
+                            <p>Tengo 3 manzanas 😊 y me regalan 2 más → 3 ___ 2 = 5</p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="true">+</div>
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="false">−</div>
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="false">×</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>Tenía 10 lápices 🟧 y regalé 4 → 10 ___ 4 = 6</p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="false">+</div>
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="true">−</div>
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="false">×</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>Tengo 5 grupos con 2 caramelos 🟧 cada uno → 5 ___ 2 = 10</p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="false">+</div>
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="false">−</div>
+                                <div class="measurement-option" onclick="selectSymbol(this)" data-correct="true">×</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Escribe una oración para cada operación:</p>
+                        <div class="number-list">
+                            <div class="number-item">
+                                <label>Suma:</label>
+                                <input type="text" class="input-field" placeholder="Ej: Tengo 4 manzanas y compro 3 más" data-min-words="4">
+                            </div>
+                            <div class="number-item">
+                                <label>Resta:</label>
+                                <input type="text" class="input-field" placeholder="Ej: Tenía 10 dulces y me comí 2" data-min-words="4">
+                            </div>
+                            <div class="number-item">
+                                <label>Multiplicación:</label>
+                                <input type="text" class="input-field" placeholder="Ej: Tengo 3 cajas con 5 lápices cada una" data-min-words="4">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Discalculia 4° Básico - Guía 2">
+                <h3>Guía 2: Discalculia - 4° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Palabras y números"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Relacionar lenguaje verbal con expresión numérica.
+                    </div>
+                    
+                    <p class="instruction">Escribe el número correcto según la frase:</p>
+                    
+                    <div class="number-list">
+                        <div class="number-item">
+                            <label>Tengo cuatro gatos →</label>
+                            <input type="text" class="input-field" placeholder="4" data-correct="4">
+                        </div>
+                        <div class="number-item">
+                            <label>Vi doce pájaros →</label>
+                            <input type="text" class="input-field" placeholder="12" data-correct="12">
+                        </div>
+                        <div class="number-item">
+                            <label>En la caja hay treinta y cinco lápices →</label>
+                            <input type="text" class="input-field" placeholder="35" data-correct="35">
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Escribe una frase usando el número 28:</p>
+                        <textarea class="text-area" placeholder="Ej: Tengo veintiocho canicas en mi colección" data-min-words="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(4)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-4"></div>
+            
+            <div class="completion-message" id="completion-message-4">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-4"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('discalculia', 4)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5° Básico -->
+        <div id="grade-5" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Discalculia 5° Básico - Guía 1">
+                <h3>Guía 1: Discalculia - 5° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Problemas con pasos"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Resolver problemas simples siguiendo una secuencia.
+                    </div>
+                    
+                    <p class="instruction">Lee y responde paso a paso:</p>
+                    
+                    <div class="number-list">
+                        <div class="number-item">
+                            <label>Juan tiene 20 caramelos. Regala 8. ¿Cuántos le quedan?</label>
+                            <input type="text" class="input-field" placeholder="12" data-correct="12">
+                        </div>
+                        <div class="number-item">
+                            <label>Una caja tiene 5 filas con 4 galletas. ¿Cuántas galletas hay en total?</label>
+                            <input type="text" class="input-field" placeholder="20" data-correct="20">
+                        </div>
+                        <div class="number-item">
+                            <label>Un bus lleva 36 niños y bajan 9. ¿Cuántos quedan en el bus?</label>
+                            <input type="text" class="input-field" placeholder="27" data-correct="27">
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Escribe un problema parecido con tus propios números:</p>
+                        <textarea class="text-area" placeholder="Ej: Tengo 15 juguetes y regalo 7. ¿Cuántos me quedan?" data-min-words="5"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Discalculia 5° Básico - Guía 2">
+                <h3>Guía 2: Discalculia - 5° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Medidas confundidas"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Diferenciar unidades de medida comunes (cm, m, L).
+                    </div>
+                    
+                    <p class="instruction">Marca con una X la unidad correcta:</p>
+                    
+                    <div class="options-group">
+                        <div class="option">
+                            <p>La regla mide 30 ___</p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="true">cm</div>
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="false">L</div>
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="false">m</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>La piscina tiene 2 ___ de profundidad</p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="false">cm</div>
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="false">L</div>
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="true">m</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>El vaso tiene 200 ___ de agua</p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="false">cm</div>
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="true">L</div>
+                                <div class="measurement-option" onclick="selectUnit(this)" data-correct="false">m</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Dibuja un objeto que mida en centímetros:</p>
+                        <div class="tracing-area" style="min-height: 150px; text-align: center;">
+                            <p>Dibuja aquí tu objeto (por ejemplo: un lápiz, una goma, etc.)</p>
+                            <p>Indica su medida aproximada: _______ cm</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(5)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-5"></div>
+            
+            <div class="completion-message" id="completion-message-5">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-5"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('discalculia', 5)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6° Básico -->
+        <div id="grade-6" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Discalculia 6° Básico - Guía 1">
+                <h3>Guía 1: Discalculia - 6° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Fracciones y confusiones"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Identificar y comparar fracciones simples.
+                    </div>
+                    
+                    <p class="instruction">Encierra en un círculo la fracción más grande:</p>
+                    
+                    <div class="options-group">
+                        <div class="option">
+                            <p>
+                                <span class="fraction">1/2</span> / 
+                                <span class="fraction">1/4</span>
+                            </p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectFraction(this)" data-correct="true">1/2</div>
+                                <div class="measurement-option" onclick="selectFraction(this)" data-correct="false">1/4</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>
+                                <span class="fraction">3/3</span> / 
+                                <span class="fraction">3/5</span>
+                            </p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectFraction(this)" data-correct="true">3/3</div>
+                                <div class="measurement-option" onclick="selectFraction(this)" data-correct="false">3/5</div>
+                            </div>
+                        </div>
+                        
+                        <div class="option">
+                            <p>
+                                <span class="fraction">3/4</span> / 
+                                <span class="fraction">3/5</span>
+                            </p>
+                            <div class="measurement-options">
+                                <div class="measurement-option" onclick="selectFraction(this)" data-correct="true">3/4</div>
+                                <div class="measurement-option" onclick="selectFraction(this)" data-correct="false">3/5</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Dibuja una pizza 🟧 y pinta la fracción 1/2:</p>
+                        <div class="tracing-area" style="min-height: 150px; text-align: center;">
+                            <p>Dibuja una pizza circular aquí y colorea la mitad</p>
+                            <div style="width: 100px; height: 100px; border-radius: 50%; border: 2px solid #d63031; margin: 0 auto; position: relative; overflow: hidden;">
+                                <div style="width: 100%; height: 100%; background: #ffeaa7; position: absolute;"></div>
+                                <div style="width: 50%; height: 100%; background: #ff7675; position: absolute;"></div>
+                            </div>
+                            <p>Esta es una pizza con 1/2 coloreada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Discalculia 6° Básico - Guía 2">
+                <h3>Guía 2: Discalculia - 6° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Problemas con texto"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Comprender y resolver problemas escritos.
+                    </div>
+                    
+                    <p class="instruction">Lee y responde:</p>
+                    
+                    <div class="number-list">
+                        <div class="number-item">
+                            <label>Un paquete tiene 6 galletas. Si compro 3 paquetes ¿Cuántas galletas tengo en total?</label>
+                            <input type="text" class="input-field" placeholder="18" data-correct="18">
+                        </div>
+                        <div class="number-item">
+                            <label>Tengo 25 stickers y regalo 7. ¿Cuántos me quedan?</label>
+                            <input type="text" class="input-field" placeholder="18" data-correct="18">
+                        </div>
+                        <div class="number-item">
+                            <label>Si cada libro cuesta $4 y compro 5 ¿Cuánto pago en total?</label>
+                            <input type="text" class="input-field" placeholder="20" data-correct="20">
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <h4>Actividad complementaria:</h4>
+                        <p>Escribe un problema usando multiplicación y dibújalo:</p>
+                        <textarea class="text-area" placeholder="Ej: Tengo 4 cajas con 3 juguetes cada una. ¿Cuántos juguetes tengo en total?" data-min-words="5"></textarea>
+                        <div class="tracing-area" style="min-height: 100px; text-align: center;">
+                            <p>Dibuja tu problema aquí</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(6)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-6"></div>
+            
+            <div class="completion-message" id="completion-message-6">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-6"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('discalculia', 6)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre grados
+        document.querySelectorAll('.grade-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.activity-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const grade = this.getAttribute('data-grade');
+                document.getElementById(`grade-${grade}`).classList.add('active');
+            });
+        });
+
+        // Funciones para seleccionar opciones
+        function selectNumber(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.number-circle').forEach(circle => {
+                circle.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function selectSymbol(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.measurement-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function selectUnit(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.measurement-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function selectFraction(element) {
+            const parent = element.parentElement;
+            parent.querySelectorAll('.measurement-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function checkAnswers(grade) {
+            const feedback = document.getElementById(`feedback-${grade}`);
+            const content = document.getElementById(`grade-${grade}`);
+            let allCorrect = true;
+            let errors = [];
+            let totalQuestions = 0;
+            let correctAnswers = 0;
+
+            // Verificar selecciones de números
+            const numberCircles = content.querySelectorAll('.number-circle.selected');
+            numberCircles.forEach(circle => {
+                totalQuestions++;
+                if (circle.getAttribute('data-correct') === 'true') {
+                    circle.classList.add('correct');
+                    circle.classList.remove('incorrect');
+                    correctAnswers++;
+                } else {
+                    circle.classList.add('incorrect');
+                    circle.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Número incorrecto: ${circle.textContent}`);
+                }
+            });
+
+            // Verificar selecciones de símbolos
+            const symbolOptions = content.querySelectorAll('.measurement-option.selected');
+            symbolOptions.forEach(option => {
+                totalQuestions++;
+                if (option.getAttribute('data-correct') === 'true') {
+                    option.classList.add('correct');
+                    option.classList.remove('incorrect');
+                    correctAnswers++;
+                } else {
+                    option.classList.add('incorrect');
+                    option.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Símbolo/Unidad incorrecta: ${option.textContent}`);
+                }
+            });
+
+            // Verificar inputs de texto
+            const textInputs = content.querySelectorAll('input[type="text"]');
+            textInputs.forEach((input, index) => {
+                totalQuestions++;
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct') ? input.getAttribute('data-correct').toLowerCase() : null;
+                
+                if (correctAnswer) {
+                    if (userAnswer === correctAnswer) {
+                        input.classList.add('correct');
+                        input.classList.remove('incorrect');
+                        correctAnswers++;
+                    } else {
+                        input.classList.add('incorrect');
+                        input.classList.remove('correct');
+                        allCorrect = false;
+                        errors.push(`Ejercicio ${index + 1}: La respuesta correcta es: <span class="correct-answer">${correctAnswer}</span>`);
+                    }
+                } else {
+                    // Para ejercicios sin respuesta específica, solo verificar que se escribió algo
+                    const minWords = parseInt(input.getAttribute('data-min-words')) || 1;
+                    const wordCount = input.value.trim().split(/\s+/).length;
+                    
+                    if (wordCount >= minWords) {
+                        input.classList.add('correct');
+                        input.classList.remove('incorrect');
+                        correctAnswers++;
+                    } else {
+                        input.classList.add('incorrect');
+                        input.classList.remove('correct');
+                        allCorrect = false;
+                        errors.push(`Ejercicio ${index + 1}: Necesitas escribir al menos ${minWords} palabra(s)`);
+                    }
+                }
+            });
+
+            // Verificar textareas
+            const textareas = content.querySelectorAll('textarea');
+            textareas.forEach((textarea, index) => {
+                totalQuestions++;
+                const minWords = parseInt(textarea.getAttribute('data-min-words')) || 10;
+                const wordCount = textarea.value.trim().split(/\s+/).length;
+                
+                if (wordCount >= minWords) {
+                    textarea.classList.add('correct');
+                    textarea.classList.remove('incorrect');
+                    correctAnswers++;
+                } else {
+                    textarea.classList.add('incorrect');
+                    textarea.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Texto ${index + 1}: Necesitas escribir al menos ${minWords} palabras`);
+                }
+            });
+
+            // Calcular porcentaje
+            const porcentaje = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+
+            // Mostrar feedback
+            if (allCorrect) {
+                feedback.innerHTML = `
+                    <strong>¡Excelente! Todas las respuestas son correctas.</strong>
+                    <p>¡Has completado la actividad perfectamente!</p>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                `;
+                feedback.className = 'feedback correct';
+                
+                // Mostrar mensaje de finalización después de 2 segundos
+                setTimeout(() => {
+                    document.getElementById(`completion-message-${grade}`).style.display = 'block';
+                    document.getElementById(`final-score-${grade}`).textContent = `Puntuación: ${correctAnswers}/${totalQuestions} (${porcentaje}%)`;
+                    feedback.scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+                
+            } else {
+                feedback.innerHTML = `
+                    <strong>¡Oh no! Te equivocaste en algunas respuestas:</strong>
+                    <ul class="error-list">
+                        ${errors.map(error => `<li>${error}</li>`).join('')}
+                    </ul>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                    <p>Revisa las respuestas marcadas en rojo y corrígelas.</p>
+                    <button class="retry-btn" onclick="retryActivity(${grade})">Intentar de nuevo</button>
+                `;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            feedback.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retryActivity(grade) {
+            const content = document.getElementById(`grade-${grade}`);
+            const feedback = document.getElementById(`feedback-${grade}`);
+            
+            // Limpiar estilos de error
+            const incorrectElements = content.querySelectorAll('.incorrect, .correct, .selected');
+            incorrectElements.forEach(element => {
+                element.classList.remove('incorrect', 'correct', 'selected');
+            });
+            
+            // Limpiar inputs
+            const inputs = content.querySelectorAll('input, textarea');
+            inputs.forEach(input => {
+                input.value = '';
+            });
+            
+            // Ocultar feedback
+            feedback.style.display = 'none';
+            
+            // Ocultar mensaje de completado
+            document.getElementById(`completion-message-${grade}`).style.display = 'none';
+        }
+
+        function goToSurvey(activity, grade) {
+            // Mapeo de actividades a áreas (ESENCIAL para la base de datos)
+            const areaMap = {
+                'discalculia': 'calculo',
+                'dislexia': 'lectura', 
+                'dislalia': 'lectura',
+                'disgrafia': 'escritura',
+                'disortografia': 'escritura',
+                'ejercicios': 'calculo'
+            };
+            
+            const area = areaMap[activity] || 'general';
+            
+            // CAMBIO AQUÍ: survey.php → survey.html
+            window.location.href = `survey.html?activity=${activity}&area=${area}&grade=${grade}`;
+        }
+
+        function goToHome() {
+            // Ruta CORREGIDA - asumiendo que index.html está en la misma carpeta
+            window.location.href = 'index.html';
+        }
+
+        // Funcionalidad para la recta numérica (simulada)
+        document.addEventListener('DOMContentLoaded', function() {
+            // Esta funcionalidad sería más compleja en una implementación real
+            // Por ahora es una simulación visual
+        });
+    </script>
+</body>
+</html>

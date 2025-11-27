@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encuesta de Satisfacción</title>
+    <style>
+        /* TODO TU CSS ACTUAL PERMANECE IGUAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .survey-section {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        input[type="email"], textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input[type="email"]:focus, textarea:focus {
+            border-color: #3498db;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+        }
+        
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .rating-container, .attention-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            gap: 10px;
+        }
+        
+        .rating-option, .attention-option {
+            text-align: center;
+            flex: 1;
+        }
+        
+        .rating-input, .attention-input {
+            display: none;
+        }
+        
+        .rating-label {
+            display: block;
+            padding: 12px 5px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 18px;
+        }
+        
+        .attention-label {
+            display: block;
+            padding: 15px 5px;
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 24px;
+        }
+        
+        .rating-input:checked + .rating-label {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+            transform: scale(1.05);
+        }
+        
+        .attention-input:checked + .attention-label {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+            transform: scale(1.05);
+        }
+        
+        .rating-label:hover, .attention-label:hover {
+            background-color: #e9ecef;
+            transform: translateY(-2px);
+        }
+        
+        .rating-value, .attention-value {
+            font-size: 14px;
+            margin-top: 8px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            font-size: 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: 600;
+        }
+        
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+        }
+
+        /* NUEVO ESTILO PARA EL BOTÓN VOLVER */
+        .back-btn {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: block;
+            width: 100%;
+            margin-top: 10px;
+            font-weight: 600;
+            text-decoration: none;
+            text-align: center;
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+        }
+        
+        .brand-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .brand-name {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+        }
+
+        /* NUEVO: Contenedor para los botones */
+        .buttons-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .rating-container, .attention-container {
+                flex-direction: column;
+            }
+            
+            .rating-option, .attention-option {
+                margin: 5px 0;
+            }
+            
+            body {
+                padding: 10px;
+            }
+            
+            .survey-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Valora tu experiencia</h1>
+            <p>Enviar comentarios</p>
+        </header>
+        
+        <div id="message"></div>
+        
+        <div class="survey-section">
+            <h2>Encuesta de satisfacción</h2>
+            
+            <form id="surveyForm">
+                <input type="hidden" id="activity" name="activity">
+                <input type="hidden" id="area" name="area">
+                <input type="hidden" id="grade" name="grade">
+                
+                <div class="form-group">
+                    <label for="email">Tu correo electrónico</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Valor de la experiencia</label>
+                    <div class="rating-container">
+                        <div class="rating-option">
+                            <input type="radio" id="rating-1" name="rating" value="1" class="rating-input" required>
+                            <label for="rating-1" class="rating-label">⭐</label>
+                            <div class="rating-value">1 - Muy mala</div>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="rating-2" name="rating" value="2" class="rating-input">
+                            <label for="rating-2" class="rating-label">⭐⭐</label>
+                            <div class="rating-value">2 - Mala</div>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="rating-3" name="rating" value="3" class="rating-input">
+                            <label for="rating-3" class="rating-label">⭐⭐⭐</label>
+                            <div class="rating-value">3 - Regular</div>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="rating-4" name="rating" value="4" class="rating-input">
+                            <label for="rating-4" class="rating-label">⭐⭐⭐⭐</label>
+                            <div class="rating-value">4 - Buena</div>
+                        </div>
+                        <div class="rating-option">
+                            <input type="radio" id="rating-5" name="rating" value="5" class="rating-input">
+                            <label for="rating-5" class="rating-label">⭐⭐⭐⭐⭐</label>
+                            <div class="rating-value">5 - Excelente</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label>¿Cómo evaluarías nuestra atención en general?</label>
+                    <div class="attention-container">
+                        <div class="attention-option">
+                            <input type="radio" id="attention-1" name="attention" value="1" class="attention-input" required>
+                            <label for="attention-1" class="attention-label">😞</label>
+                            <div class="attention-value">Muy mala</div>
+                        </div>
+                        <div class="attention-option">
+                            <input type="radio" id="attention-2" name="attention" value="2" class="attention-input">
+                            <label for="attention-2" class="attention-label">😕</label>
+                            <div class="attention-value">Mala</div>
+                        </div>
+                        <div class="attention-option">
+                            <input type="radio" id="attention-3" name="attention" value="3" class="attention-input">
+                            <label for="attention-3" class="attention-label">😐</label>
+                            <div class="attention-value">Regular</div>
+                        </div>
+                        <div class="attention-option">
+                            <input type="radio" id="attention-4" name="attention" value="4" class="attention-input">
+                            <label for="attention-4" class="attention-label">😊</label>
+                            <div class="attention-value">Buena</div>
+                        </div>
+                        <div class="attention-option">
+                            <input type="radio" id="attention-5" name="attention" value="5" class="attention-input">
+                            <label for="attention-5" class="attention-label">😄</label>
+                            <div class="attention-value">Excelente</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="comments">Comentarios sobre tu experiencia</label>
+                    <textarea id="comments" name="comments" placeholder="Cuéntanos más sobre tu experiencia..." required></textarea>
+                </div>
+                
+                <div class="buttons-container">
+                    <button type="submit" class="submit-btn">Enviar feedback</button>
+                    <a href="index.html" class="back-btn">← Volver al Inicio</a>
+                </div>
+            </form>
+        </div>
+        
+        <div class="brand-section">
+            <p class="brand-name">ASUS Vivobook</p>
+        </div>
+    </div>
+
+    <script>
+        // Obtener parámetros de la URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const activity = urlParams.get('activity') || '';
+        const area = urlParams.get('area') || '';
+        const grade = urlParams.get('grade') || '';
+
+        // Llenar los campos hidden
+        document.getElementById('activity').value = activity;
+        document.getElementById('area').value = area;
+        document.getElementById('grade').value = grade;
+
+        // Manejar el envío del formulario
+        document.getElementById('surveyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validar email
+            const email = document.getElementById('email').value;
+            const rating = document.querySelector('input[name="rating"]:checked');
+            const attention = document.querySelector('input[name="attention"]:checked');
+            const comments = document.getElementById('comments').value;
+            
+            if (!validateEmail(email)) {
+                showMessage('Por favor, ingresa un email válido', 'error');
+                return;
+            }
+            
+            if (!rating || !attention) {
+                showMessage('Por favor, completa todas las valoraciones', 'error');
+                return;
+            }
+            
+            // Recoger todos los datos
+            const formData = {
+                email: email,
+                rating: rating.value,
+                attention: attention.value,
+                comments: comments,
+                activity: activity,
+                area: area,
+                grade: grade,
+                timestamp: new Date().toLocaleString()
+            };
+            
+            // Guardar en localStorage
+            const surveys = JSON.parse(localStorage.getItem('encuestas') || '[]');
+            surveys.push(formData);
+            localStorage.setItem('encuestas', JSON.stringify(surveys));
+            
+            // Mostrar en consola
+            console.log('📊 Encuesta guardada:', formData);
+            
+            showMessage('¡Gracias por tu feedback! Los datos se han guardado correctamente.', 'success');
+            
+            // Limpiar formulario
+            this.reset();
+        });
+
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type === 'success' ? 'success-message' : 'error-message'}">${text}</div>`;
+            
+            // Auto-ocultar después de 5 segundos
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 5000);
+        }
+
+        // Función para volver al inicio (por si quieres usar también con JavaScript)
+        function goToHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

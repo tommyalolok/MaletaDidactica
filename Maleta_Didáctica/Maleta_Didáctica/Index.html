@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maleta Didáctica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        .page {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        /* Página de Áreas */
+        header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        header h1 {
+            color: #4a6fa5;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+
+        /* Contenedor de los 3 cuadrados */
+        .squares-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-bottom: 40px;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Estilo base del cuadrado */
+        .area-square {
+            position: relative;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: all 0.4s ease;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        /* Colores específicos para cada área */
+        .area-square[data-area="lectura"] {
+            border-top: 5px solid #6b8cbc;
+        }
+
+        .area-square[data-area="escritura"] {
+            border-top: 5px solid #ff9f1c;
+        }
+
+        .area-square[data-area="calculo"] {
+            border-top: 5px solid #28a745;
+        }
+
+        /* Contenido principal del cuadrado */
+        .square-content {
+            transition: all 0.4s ease;
+        }
+
+        .square-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .area-square h3 {
+            color: #333;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        /* Actividades (ocultas inicialmente) */
+        .square-activities {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: inherit;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.4s ease;
+            padding: 20px;
+        }
+
+        /* Cuando el cuadrado está expandido */
+        .area-square.expanded {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .area-square.expanded .square-content {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+
+        .area-square.expanded .square-activities {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Items de actividades */
+        .activity-item {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            margin: 8px 0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 80%;
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid transparent;
+        }
+
+        .activity-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        /* Colores de actividades al hacer hover */
+        .area-square[data-area="lectura"] .activity-item:hover {
+            border-color: #6b8cbc;
+            background: #6b8cbc;
+            color: white;
+        }
+
+        .area-square[data-area="escritura"] .activity-item:hover {
+            border-color: #ff9f1c;
+            background: #ff9f1c;
+            color: white;
+        }
+
+        .area-square[data-area="calculo"] .activity-item:hover {
+            border-color: #28a745;
+            background: #28a745;
+            color: white;
+        }
+
+        /* Overlay para cuando un cuadrado está expandido */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            z-index: 5;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 20px;
+            }
+            
+            .squares-container {
+                grid-template-columns: 1fr;
+                max-width: 400px;
+            }
+            
+            header h1 {
+                font-size: 2em;
+            }
+            
+            .area-square {
+                min-height: 150px;
+            }
+            
+            .square-icon {
+                font-size: 40px;
+            }
+            
+            .area-square h3 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Página principal con los 3 cuadrados -->
+        <div class="page">
+            <header>
+                <h1>MALETA DIDÁCTICA</h1>
+                <p>Selecciona un área para comenzar</p>
+            </header>
+            
+            <div class="squares-container">
+                <!-- Cuadrado de Lectura -->
+                <div class="area-square" data-area="lectura">
+                    <div class="square-content">
+                        <div class="square-icon">📖</div>
+                        <h3>Lectura</h3>
+                        <p>2 actividades</p>
+                    </div>
+                    <div class="square-activities">
+                        <div class="activity-item" data-activity="dislexia">
+                            <span>Dislexia</span>
+                        </div>
+                        <div class="activity-item" data-activity="dislalia">
+                            <span>Dislalia</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cuadrado de Escritura -->
+                <div class="area-square" data-area="escritura">
+                    <div class="square-content">
+                        <div class="square-icon">✍️</div>
+                        <h3>Escritura</h3>
+                        <p>2 actividades</p>
+                    </div>
+                    <div class="square-activities">
+                        <div class="activity-item" data-activity="disgrafia">
+                            <span>Disgrafía</span>
+                        </div>
+                        <div class="activity-item" data-activity="disortografia">
+                            <span>Disortografía</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cuadrado de Cálculo -->
+                <div class="area-square" data-area="calculo">
+                    <div class="square-content">
+                        <div class="square-icon">🧮</div>
+                        <h3>Cálculo</h3>
+                        <p>1 actividad</p>
+                    </div>
+                    <div class="square-activities">
+                        <div class="activity-item" data-activity="ejercicios">
+                            <span>Ejercicios</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mapeo de actividades a archivos
+            const activityFiles = {
+                'lectura': {
+                    'dislexia': 'dislexia.html',
+                    'dislalia': 'dislalia.html'
+                },
+                'escritura': {
+                    'disgrafia': 'disgrafia.html',
+                    'disortografia': 'disortografia.html'
+                },
+                'calculo': {
+                    'ejercicios': 'ejercicios.html'
+                }
+            };
+
+            // Variables para control de expansión
+            let expandedSquare = null;
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            document.body.appendChild(overlay);
+
+            // Clic en los cuadrados de áreas
+            document.querySelectorAll('.area-square').forEach(square => {
+                square.addEventListener('click', function(e) {
+                    // Si ya está expandido, no hacer nada (las actividades manejan su propio clic)
+                    if (this.classList.contains('expanded')) {
+                        return;
+                    }
+                    
+                    // Colapsar cuadrado previamente expandido
+                    if (expandedSquare && expandedSquare !== this) {
+                        collapseSquare(expandedSquare);
+                    }
+                    
+                    // Expandir este cuadrado
+                    expandSquare(this);
+                });
+            });
+
+            // Clic en actividades específicas
+            document.querySelectorAll('.activity-item').forEach(activity => {
+                activity.addEventListener('click', function(e) {
+                    e.stopPropagation(); // Prevenir que el clic llegue al cuadrado padre
+                    
+                    const area = this.closest('.area-square').getAttribute('data-area');
+                    const activityName = this.getAttribute('data-activity');
+                    
+                    // Navegar a la actividad
+                    navigateToActivity(area, activityName);
+                });
+            });
+
+            // Clic en el overlay para colapsar
+            overlay.addEventListener('click', function() {
+                if (expandedSquare) {
+                    collapseSquare(expandedSquare);
+                }
+            });
+
+            function expandSquare(square) {
+                expandedSquare = square;
+                square.classList.add('expanded');
+                overlay.style.display = 'block';
+                
+                // Ajustar el z-index de todos los cuadrados
+                document.querySelectorAll('.area-square').forEach(sq => {
+                    if (sq !== square) {
+                        sq.style.zIndex = '1';
+                    } else {
+                        sq.style.zIndex = '10';
+                    }
+                });
+            }
+
+            function collapseSquare(square) {
+                square.classList.remove('expanded');
+                overlay.style.display = 'none';
+                expandedSquare = null;
+                
+                // Resetear z-index
+                document.querySelectorAll('.area-square').forEach(sq => {
+                    sq.style.zIndex = '';
+                });
+            }
+
+            function navigateToActivity(area, activity) {
+                const filePath = activityFiles[area]?.[activity];
+                if (filePath) {
+                    window.location.href = filePath;
+                } else {
+                    console.error('Archivo de actividad no encontrado:', area, activity);
+                    alert('Actividad no disponible en este momento.');
+                }
+            }
+
+            // Cerrar cuadrado expandido con ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && expandedSquare) {
+                    collapseSquare(expandedSquare);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
