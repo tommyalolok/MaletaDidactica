@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Dislexia - Maleta Didáctica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: #6b8cbc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .grade-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .grade-btn {
+            background: #6b8cbc;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .grade-btn:hover, .grade-btn.active {
+            background: #5a7caa;
+            transform: translateY(-2px);
+        }
+
+        .activity-content {
+            display: none;
+        }
+
+        .activity-content.active {
+            display: block;
+        }
+
+        .activity-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6b8cbc;
+        }
+
+        .activity-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .exercise {
+            margin-bottom: 25px;
+        }
+
+        .exercise h4 {
+            color: #6b8cbc;
+            margin-bottom: 15px;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .word-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .input-field.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .input-field.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .option {
+            padding: 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #6b8cbc;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            margin: 10px 0;
+        }
+
+        .text-area.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .text-area.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .error-list li {
+            margin: 8px 0;
+            color: #721c24;
+        }
+
+        .correct-answer {
+            color: #155724;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background: #d1ecf1;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border: 2px solid #bee5eb;
+        }
+
+        .survey-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .survey-btn.yes {
+            background: #28a745;
+            color: white;
+        }
+
+        .survey-btn.no {
+            background: #6c757d;
+            color: white;
+        }
+
+        .survey-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .retry-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .retry-btn:hover {
+            background: #e0a800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ejercicios de Dislexia</h1>
+            <p>Actividades para mejorar la lectura y escritura</p>
+        </header>
+
+        <a href="../index.html" class="back-btn">← Volver al Inicio</a>
+
+        <!-- Selector de Grado -->
+        <div class="grade-selector">
+            <div class="grade-btn active" data-grade="3">3° Básico</div>
+            <div class="grade-btn" data-grade="4">4° Básico</div>
+            <div class="grade-btn" data-grade="5">5° Básico</div>
+            <div class="grade-btn" data-grade="6">6° Básico</div>
+        </div>
+
+        <!-- 3° Básico -->
+        <div id="grade-3" class="activity-content active">
+            <div class="activity-section">
+                <h3>Actividad 1: Completa palabras con sílabas faltantes</h3>
+                <div class="word-list">
+                    <div class="word-item">
+                        <label>ca____o</label>
+                        <input type="text" class="input-field" placeholder="Escribe la sílaba" data-correct="sa">
+                    </div>
+                    <div class="word-item">
+                        <label>pe____o</label>
+                        <input type="text" class="input-field" placeholder="Escribe la sílaba" data-correct="rr">
+                    </div>
+                    <div class="word-item">
+                        <label>la____u</label>
+                        <input type="text" class="input-field" placeholder="Escribe la sílaba" data-correct="p">
+                    </div>
+                    <div class="word-item">
+                        <label>so____a</label>
+                        <input type="text" class="input-field" placeholder="Escribe la sílaba" data-correct="p">
+                    </div>
+                    <div class="word-item">
+                        <label>ma____a</label>
+                        <input type="text" class="input-field" placeholder="Escribe la sílaba" data-correct="nz">
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 2: Identifica la palabra correcta</h3>
+                <div class="options-group">
+                    <div class="option">
+                        <input type="radio" name="word1" value="casa" data-correct="true"> casa
+                        <input type="radio" name="word1" value="caza"> caza
+                        <input type="radio" name="word1" value="casssa"> casssa
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="word2" value="pero"> pero
+                        <input type="radio" name="word2" value="perro" data-correct="true"> perro
+                        <input type="radio" name="word2" value="pero"> pero
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="word3" value="sopa" data-correct="true"> sopa
+                        <input type="radio" name="word3" value="zopa"> zopa
+                        <input type="radio" name="word3" value="ssopa"> ssopa
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 3: Lectura y corrección</h3>
+                <div class="exercise">
+                    <h4>Texto con errores:</h4>
+                    <p>"La nina corre por el parqe con su ermano. Los dos juegan a las esondidas y rieen mucho. De pronto la nina ve un perro y dise: mira ese perito!"</p>
+                    
+                    <h4>Reescribe correctamente:</h4>
+                    <textarea class="text-area" placeholder="Escribe el texto corregido aquí..." data-min-words="15"></textarea>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(3)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-3"></div>
+            
+            <!-- Mensaje de finalización -->
+            <div class="completion-message" id="completion-message-3">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-3"></p>
+                <p>¿Te gustaría completar la encuesta de satisfacción?</p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislexia', 3)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4° Básico -->
+        <div id="grade-4" class="activity-content">
+            <div class="activity-section">
+                <h3>Actividad 1: Ordena las letras para formar palabras</h3>
+                <div class="word-list">
+                    <div class="word-item">
+                        <label>RATO →</label>
+                        <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="rato">
+                    </div>
+                    <div class="word-item">
+                        <label>PEMAR →</label>
+                        <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="perma">
+                    </div>
+                    <div class="word-item">
+                        <label>SOLA →</label>
+                        <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="sola">
+                    </div>
+                    <div class="word-item">
+                        <label>JARO →</label>
+                        <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="jaro">
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 2: Lectura y corrección</h3>
+                <div class="exercise">
+                    <h4>Texto con errores:</h4>
+                    <p>"Mi ermana me yevó al yuego. Yo corri tan rapido que se me calleron los guantes. Despues bolvimos caminado y yegamos cansados."</p>
+                    
+                    <h4>Reescribe correctamente:</h4>
+                    <textarea class="text-area" placeholder="Escribe el texto corregido aquí..." data-min-words="12"></textarea>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 3: Elige la palabra correcta</h3>
+                <div class="options-group">
+                    <div class="option">
+                        <input type="radio" name="choice1" value="sello" data-correct="true"> sello (para enviar una carta)
+                        <input type="radio" name="choice1" value="cello"> cello
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="choice2" value="llave" data-correct="true"> llave (para abrir una puerta)
+                        <input type="radio" name="choice2" value="yabe"> yabe
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="choice3" value="jirafa" data-correct="true"> jirafa (animal de cuello largo)
+                        <input type="radio" name="choice3" value="girafa"> girafa
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(4)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-4"></div>
+            
+            <div class="completion-message" id="completion-message-4">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-4"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislexia', 4)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5° Básico -->
+        <div id="grade-5" class="activity-content">
+            <div class="activity-section">
+                <h3>Actividad 1: Identifica la palabra correcta</h3>
+                <div class="options-group">
+                    <div class="option">
+                        <input type="radio" name="pair1" value="casa" data-correct="true"> casa
+                        <input type="radio" name="pair1" value="caza"> caza
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="pair2" value="honda" data-correct="true"> honda
+                        <input type="radio" name="pair2" value="onda"> onda
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="pair3" value="vello" data-correct="true"> vello
+                        <input type="radio" name="pair3" value="bello"> bello
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 2: Reorganiza palabras desordenadas</h3>
+                <div class="exercise">
+                    <div class="word-item">
+                        <label>al / perro / El / agua / bebe</label>
+                        <input type="text" class="input-field" placeholder="Escribe la oración ordenada" data-correct="El perro bebe agua">
+                    </div>
+                    <div class="word-item">
+                        <label>mucho / leo / Yo / dia / cada</label>
+                        <input type="text" class="input-field" placeholder="Escribe la oración ordenada" data-correct="Yo leo mucho cada dia">
+                    </div>
+                    <div class="word-item">
+                        <label>ayer / caminamos / parque / al</label>
+                        <input type="text" class="input-field" placeholder="Escribe la oración ordenada" data-correct="Ayer caminamos al parque">
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 3: Completa palabras con letras correctas</h3>
+                <div class="word-list">
+                    <div class="word-item">
+                        <label>a____er (b/v)</label>
+                        <input type="text" class="input-field" placeholder="Escribe la letra" data-correct="b">
+                    </div>
+                    <div class="word-item">
+                        <label>____enero (j/g)</label>
+                        <input type="text" class="input-field" placeholder="Escribe la letra" data-correct="g">
+                    </div>
+                    <div class="word-item">
+                        <label>a____uela (b/v)</label>
+                        <input type="text" class="input-field" placeholder="Escribe la letra" data-correct="b">
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(5)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-5"></div>
+            
+            <div class="completion-message" id="completion-message-5">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-5"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislexia', 5)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6° Básico -->
+        <div id="grade-6" class="activity-content">
+            <div class="activity-section">
+                <h3>Actividad 1: Reescribe oraciones corrigiendo errores</h3>
+                <div class="exercise">
+                    <div class="word-item">
+                        <label>La caza es mui divertida.</label>
+                        <input type="text" class="input-field" placeholder="Escribe la corrección" data-correct="La casa es muy divertida">
+                    </div>
+                    <div class="word-item">
+                        <label>Mi ermana y yo fuimos al ciene.</label>
+                        <input type="text" class="input-field" placeholder="Escribe la corrección" data-correct="Mi hermana y yo fuimos al cine">
+                    </div>
+                    <div class="word-item">
+                        <label>El berano es mi epoca favorita.</label>
+                        <input type="text" class="input-field" placeholder="Escribe la corrección" data-correct="El verano es mi época favorita">
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 2: Análisis y corrección completa</h3>
+                <div class="exercise">
+                    <h4>Corrige mayúsculas, comas, tildes y letras:</h4>
+                    <div class="word-item">
+                        <label>ayer fuimos al museu i ber los cuadros</label>
+                        <input type="text" class="input-field" placeholder="Escribe la corrección" data-correct="Ayer fuimos al museo a ver los cuadros">
+                    </div>
+                    <div class="word-item">
+                        <label>mi ermano dise que no le gutan los libros</label>
+                        <input type="text" class="input-field" placeholder="Escribe la corrección" data-correct="Mi hermano dice que no le gustan los libros">
+                    </div>
+                </div>
+            </div>
+
+            <div class="activity-section">
+                <h3>Actividad 3: Selecciona la sílaba correcta</h3>
+                <div class="word-list">
+                    <div class="word-item">
+                        <label>____brigo (a/ha)</label>
+                        <input type="text" class="input-field" placeholder="Escribe la sílaba" data-correct="a">
+                    </div>
+                    <div class="word-item">
+                        <label>ca____ón (l/r)</label>
+                        <input type="text" class="input-field" placeholder="Escribe la letra" data-correct="r">
+                    </div>
+                    <div class="word-item">
+                        <label>____emelo (g/j)</label>
+                        <input type="text" class="input-field" placeholder="Escribe la letra" data-correct="g">
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(6)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-6"></div>
+            
+            <div class="completion-message" id="completion-message-6">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-6"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislexia', 6)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre grados
+        document.querySelectorAll('.grade-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remover activo de todos los botones
+                document.querySelectorAll('.grade-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Agregar activo al botón clickeado
+                this.classList.add('active');
+                
+                // Ocultar todos los contenidos
+                document.querySelectorAll('.activity-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Mostrar contenido del grado seleccionado
+                const grade = this.getAttribute('data-grade');
+                document.getElementById(`grade-${grade}`).classList.add('active');
+            });
+        });
+
+        function checkAnswers(grade) {
+            const feedback = document.getElementById(`feedback-${grade}`);
+            const content = document.getElementById(`grade-${grade}`);
+            let allCorrect = true;
+            let errors = [];
+
+            // Verificar inputs de texto
+            const textInputs = content.querySelectorAll('input[type="text"]');
+            textInputs.forEach((input, index) => {
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                    input.classList.remove('incorrect');
+                } else {
+                    input.classList.add('incorrect');
+                    input.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Palabra ${index + 1}: "${input.previousElementSibling.textContent}" - La respuesta correcta es: <span class="correct-answer">${correctAnswer}</span>`);
+                }
+            });
+
+            // Verificar radio buttons
+            const radioGroups = content.querySelectorAll('.options-group');
+            radioGroups.forEach((group, groupIndex) => {
+                const correctOption = group.querySelector('input[data-correct="true"]:checked');
+                const options = group.querySelectorAll('.option');
+                
+                if (correctOption) {
+                    options.forEach(opt => {
+                        if (opt.contains(correctOption)) {
+                            opt.classList.add('correct');
+                            opt.classList.remove('incorrect');
+                        }
+                    });
+                } else {
+                    allCorrect = false;
+                    options.forEach(opt => {
+                        opt.classList.add('incorrect');
+                        opt.classList.remove('correct');
+                    });
+                    errors.push(`Opción ${groupIndex + 1}: No seleccionaste la respuesta correcta`);
+                }
+            });
+
+            // Verificar textarea
+            const textareas = content.querySelectorAll('textarea');
+            textareas.forEach((textarea, index) => {
+                const minWords = parseInt(textarea.getAttribute('data-min-words')) || 10;
+                const wordCount = textarea.value.trim().split(/\s+/).length;
+                
+                if (wordCount >= minWords) {
+                    textarea.classList.add('correct');
+                    textarea.classList.remove('incorrect');
+                } else {
+                    textarea.classList.add('incorrect');
+                    textarea.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Texto ${index + 1}: Necesitas escribir al menos ${minWords} palabras`);
+                }
+            });
+
+            // Mostrar feedback
+            if (allCorrect) {
+                feedback.innerHTML = `
+                    <strong>¡Excelente! Todas las respuestas son correctas.</strong>
+                    <p>¡Has completado la actividad perfectamente!</p>
+                `;
+                feedback.className = 'feedback correct';
+                
+                // Mostrar mensaje de finalización después de 2 segundos
+                setTimeout(() => {
+                    document.getElementById(`completion-message-${grade}`).style.display = 'block';
+                    feedback.scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+                
+            } else {
+                feedback.innerHTML = `
+                    <strong>¡Oh no! Te equivocaste en algunas respuestas:</strong>
+                    <ul class="error-list">
+                        ${errors.map(error => `<li>${error}</li>`).join('')}
+                    </ul>
+                    <p>Revisa las respuestas marcadas en rojo y corrígelas.</p>
+                    <button class="retry-btn" onclick="retryActivity(${grade})">Intentar de nuevo</button>
+                `;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            feedback.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retryActivity(grade) {
+            const content = document.getElementById(`grade-${grade}`);
+            const feedback = document.getElementById(`feedback-${grade}`);
+            
+            // Limpiar estilos de error
+            const incorrectElements = content.querySelectorAll('.incorrect');
+            incorrectElements.forEach(element => {
+                element.classList.remove('incorrect');
+            });
+            
+            // Ocultar feedback
+            feedback.style.display = 'none';
+            
+            // Enfocar el primer elemento incorrecto
+            const firstIncorrect = content.querySelector('.input-field, .option, .text-area');
+            if (firstIncorrect) {
+                firstIncorrect.focus();
+            }
+        }
+
+        function goToSurvey(activity, grade) {
+            // Mapeo de actividades a áreas (ESENCIAL para la base de datos)
+            const areaMap = {
+                'discalculia': 'calculo',
+                'dislexia': 'lectura', 
+                'dislalia': 'lectura',
+                'disgrafia': 'escritura',
+                'disortografia': 'escritura',
+                'ejercicios': 'calculo'
+            };
+            
+            const area = areaMap[activity] || 'general';
+            
+            // CAMBIO AQUÍ: survey.php → survey.html
+            window.location.href = `survey.html?activity=${activity}&area=${area}&grade=${grade}`;
+        }
+
+        function goToHome() {
+            // Ruta CORREGIDA - asumiendo que index.html está en la misma carpeta
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

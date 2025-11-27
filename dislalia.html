@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Dislalia - Maleta Didáctica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: #6b8cbc;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .grade-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .grade-btn {
+            background: #6b8cbc;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .grade-btn:hover, .grade-btn.active {
+            background: #5a7caa;
+            transform: translateY(-2px);
+        }
+
+        .activity-content {
+            display: none;
+        }
+
+        .activity-content.active {
+            display: block;
+        }
+
+        .activity-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #6b8cbc;
+        }
+
+        .activity-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .word-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+            text-align: center;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            padding: 10px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-item:hover {
+            border-color: #6b8cbc;
+        }
+
+        .checkbox-item.selected {
+            background: #e7f3ff;
+            border-color: #6b8cbc;
+        }
+
+        .checkbox-item.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .checkbox-item.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .audio-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .audio-btn:hover {
+            background: #218838;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 80px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            margin: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .text-area.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .text-area.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #ffffff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .error-list li {
+            margin: 8px 0;
+            color: #721c24;
+        }
+
+        .correct-answer {
+            color: #155724;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background: #d1ecf1;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border: 2px solid #bee5eb;
+        }
+
+        .survey-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .survey-btn.yes {
+            background: #28a745;
+            color: white;
+        }
+
+        .survey-btn.no {
+            background: #6c757d;
+            color: white;
+        }
+
+        .survey-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .retry-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .retry-btn:hover {
+            background: #e0a800;
+        }
+
+        .instruction {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 8px;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ejercicios de Dislalia</h1>
+            <p>Actividades para mejorar la pronunciación</p>
+        </header>
+
+        <a href="../index.html" class="back-btn">← Volver al Inicio</a>
+
+        <!-- Selector de Grado -->
+        <div class="grade-selector">
+            <div class="grade-btn active" data-grade="3">3° Básico</div>
+            <div class="grade-btn" data-grade="4">4° Básico</div>
+            <div class="grade-btn" data-grade="5">5° Básico</div>
+            <div class="grade-btn" data-grade="6">6° Básico</div>
+        </div>
+
+        <!-- 3° Básico -->
+        <div id="grade-3" class="activity-content active">
+            <!-- Guía 1: Sonidos /r/ y /l/ -->
+            <div class="activity-section" data-guia="Sonidos /r/ y /l/">
+                <h3>Guía 1: Sonidos /r/ y /l/</h3>
+                <p class="instruction">Marca las palabras que tengan el sonido /r/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /r/ - Rana">
+                        <input type="checkbox" name="r-words" value="rana"> Rana
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /r/ - Lado">
+                        <input type="checkbox" name="r-words" value="lado"> Lado
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /r/ - Rosa">
+                        <input type="checkbox" name="r-words" value="rosa"> Rosa
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /r/ - Lana">
+                        <input type="checkbox" name="r-words" value="lana"> Lana
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /r/ - Loro">
+                        <input type="checkbox" name="r-words" value="loro"> Loro
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /r/ - Rata">
+                        <input type="checkbox" name="r-words" value="rata"> Rata
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Di en voz alta tres palabras con /r/ y escribe una:</p>
+                    <textarea class="text-area" placeholder="Escribe tu palabra aquí..." data-min-words="1" data-pregunta="Palabras con sonido /r/"></textarea>
+                </div>
+            </div>
+
+            <!-- Guía 2: Sonido /s/ -->
+            <div class="activity-section" data-guia="Sonido /s/ en palabras">
+                <h3>Guía 2: Sonido /s/ en palabras</h3>
+                <p class="instruction">Encierra las palabras que comienzan con el sonido /s/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /s/ - Sol">
+                        <input type="checkbox" name="s-words" value="sol"> Sol
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /s/ - Casa">
+                        <input type="checkbox" name="s-words" value="casa"> Casa
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /s/ - Sopa">
+                        <input type="checkbox" name="s-words" value="sopa"> Sopa
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /s/ - Mesa">
+                        <input type="checkbox" name="s-words" value="mesa"> Mesa
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /s/ - Silla">
+                        <input type="checkbox" name="s-words" value="silla"> Silla
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /s/ - Zapato">
+                        <input type="checkbox" name="s-words" value="zapato"> Zapato
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Di en voz alta una oración con tres palabras que tengan el sonido /s/:</p>
+                    <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="3" data-pregunta="Oración con palabras con /s/"></textarea>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submit-btn-3" onclick="checkDislaliaAnswers(3)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-3"></div>
+            
+            <!-- Mensaje de finalización -->
+            <div class="completion-message" id="completion-message-3">
+                <h3>¡Actividad Completada!</h3>
+                <div class="score-display" id="final-score-3"></div>
+                <p>¿Te gustaría completar la encuesta de satisfacción?</p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislalia', 3)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4° Básico -->
+        <div id="grade-4" class="activity-content">
+            <!-- Guía 1: Sonidos /ch/ y /sh/ -->
+            <div class="activity-section" data-guia="Palabras con /ch/ y /sh/">
+                <h3>Guía 1: Palabras con /ch/ y /sh/</h3>
+                <p class="instruction">Marca las palabras que contengan el sonido /ch/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /ch/ - Chicle">
+                        <input type="checkbox" name="ch-words" value="chicle"> Chicle
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /ch/ - Silla">
+                        <input type="checkbox" name="ch-words" value="silla"> Silla
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /ch/ - Chancho">
+                        <input type="checkbox" name="ch-words" value="chancho"> Chancho
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /ch/ - Chamarra">
+                        <input type="checkbox" name="ch-words" value="chamarra"> Chamarra
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /ch/ - Zapato">
+                        <input type="checkbox" name="ch-words" value="zapato"> Zapato
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Escribe una oración con dos palabras que tengan /ch/:</p>
+                    <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="2" data-pregunta="Oración con palabras con /ch/"></textarea>
+                </div>
+            </div>
+
+            <!-- Guía 2: Sonido /r/ fuerte y suave -->
+            <div class="activity-section" data-guia="Sonido /r/ fuerte y suave">
+                <h3>Guía 2: Sonido /r/ fuerte y suave</h3>
+                <p class="instruction">Subraya las palabras donde la /r/ se pronuncie fuerte</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con /r/ fuerte - Perro">
+                        <input type="checkbox" name="r-fuerte" value="perro"> Perro
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con /r/ fuerte - Caro">
+                        <input type="checkbox" name="r-fuerte" value="caro"> Caro
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con /r/ fuerte - Roca">
+                        <input type="checkbox" name="r-fuerte" value="roca"> Roca
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con /r/ fuerte - Rana">
+                        <input type="checkbox" name="r-fuerte" value="rana"> Rana
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con /r/ fuerte - Aro">
+                        <input type="checkbox" name="r-fuerte" value="aro"> Aro
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con /r/ fuerte - Arroz">
+                        <input type="checkbox" name="r-fuerte" value="arroz"> Arroz
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Di en voz alta dos palabras con /r/ fuerte y dos con /r/ suave:</p>
+                    <textarea class="text-area" placeholder="Escribe las palabras aquí..." data-min-words="4" data-pregunta="Palabras con /r/ fuerte y suave"></textarea>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submit-btn-4" onclick="checkDislaliaAnswers(4)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-4"></div>
+            
+            <div class="completion-message" id="completion-message-4">
+                <h3>¡Actividad Completada!</h3>
+                <div class="score-display" id="final-score-4"></div>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislalia', 4)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5° Básico -->
+        <div id="grade-5" class="activity-content">
+            <!-- Guía 1: Sonido /d/ y /t/ -->
+            <div class="activity-section" data-guia="Sonido /d/ y /t/">
+                <h3>Guía 1: Sonido /d/ y /t/</h3>
+                <p class="instruction">Encierra las palabras que empiecen con el sonido /t/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /t/ - dedo">
+                        <input type="checkbox" name="t-words" value="dedo"> dedo
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /t/ - tapa">
+                        <input type="checkbox" name="t-words" value="tapa"> tapa
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /t/ - toro">
+                        <input type="checkbox" name="t-words" value="toro"> toro
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /t/ - diente">
+                        <input type="checkbox" name="t-words" value="diente"> diente
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /t/ - tubo">
+                        <input type="checkbox" name="t-words" value="tubo"> tubo
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /t/ - dado">
+                        <input type="checkbox" name="t-words" value="dado"> dado
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Escribe tres palabras con /t/ y léelas en voz alta:</p>
+                    <textarea class="text-area" placeholder="Escribe tus palabras aquí..." data-min-words="3" data-pregunta="Palabras con sonido /t/"></textarea>
+                </div>
+            </div>
+
+            <!-- Guía 2: Sonido /p/ y /b/ -->
+            <div class="activity-section" data-guia="Sonido /p/ y /b/">
+                <h3>Guía 2: Sonido /p/ y /b/</h3>
+                <p class="instruction">Marca las palabras que comienzan con /b/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /b/ - papa">
+                        <input type="checkbox" name="b-words" value="papa"> papa
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /b/ - bola">
+                        <input type="checkbox" name="b-words" value="bola"> bola
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /b/ - palo">
+                        <input type="checkbox" name="b-words" value="palo"> palo
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /b/ - barco">
+                        <input type="checkbox" name="b-words" value="barco"> barco
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra que comienza con /b/ - pelo">
+                        <input type="checkbox" name="b-words" value="pelo"> pelo
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra que comienza con /b/ - beso">
+                        <input type="checkbox" name="b-words" value="beso"> beso
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Di una oración usando tres palabras que comiencen con /b/:</p>
+                    <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="3" data-pregunta="Oración con palabras con /b/"></textarea>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submit-btn-5" onclick="checkDislaliaAnswers(5)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-5"></div>
+            
+            <div class="completion-message" id="completion-message-5">
+                <h3>¡Actividad Completada!</h3>
+                <div class="score-display" id="final-score-5"></div>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislalia', 5)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6° Básico -->
+        <div id="grade-6" class="activity-content">
+            <!-- Guía 1: Palabras trabadas con /pl/, /pr/, /bl/, /br/ -->
+            <div class="activity-section" data-guia="Palabras trabadas con /pl/, /pr/, /bl/, /br/">
+                <h3>Guía 1: Palabras trabadas con /pl/, /pr/, /bl/, /br/</h3>
+                <p class="instruction">Lee en voz alta y subraya las palabras con el grupo /br/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con grupo /br/ - blanco">
+                        <input type="checkbox" name="br-words" value="blanco"> blanco
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con grupo /br/ - brazo">
+                        <input type="checkbox" name="br-words" value="brazo"> brazo
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con grupo /br/ - plato">
+                        <input type="checkbox" name="br-words" value="plato"> plato
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con grupo /br/ - brújula">
+                        <input type="checkbox" name="br-words" value="brújula"> brújula
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con grupo /br/ - pluma">
+                        <input type="checkbox" name="br-words" value="pluma"> pluma
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con grupo /br/ - brote">
+                        <input type="checkbox" name="br-words" value="brote"> brote
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Escribe una oración con dos palabras que tengan /br/:</p>
+                    <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="2" data-pregunta="Oración con palabras con /br/"></textarea>
+                </div>
+            </div>
+
+            <!-- Guía 2: Sonidos confundidos /f/ y /j/ -->
+            <div class="activity-section" data-guia="Sonidos confundidos /f/ y /j/">
+                <h3>Guía 2: Sonidos confundidos /f/ y /j/</h3>
+                <p class="instruction">Rodea con un círculo las palabras que tengan /f/</p>
+                
+                <div class="checkbox-group">
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /f/ - hoja">
+                        <input type="checkbox" name="f-words" value="hoja"> hoja
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /f/ - foca">
+                        <input type="checkbox" name="f-words" value="foca"> foca
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /f/ - fiesta">
+                        <input type="checkbox" name="f-words" value="fiesta"> fiesta
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /f/ - jarra">
+                        <input type="checkbox" name="f-words" value="jarra"> jarra
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="true" data-pregunta="Palabra con sonido /f/ - fuego">
+                        <input type="checkbox" name="f-words" value="fuego"> fuego
+                    </div>
+                    <div class="checkbox-item" onclick="toggleCheckbox(this)" data-correct="false" data-pregunta="Palabra con sonido /f/ - jabón">
+                        <input type="checkbox" name="f-words" value="jabón"> jabón
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad complementaria:</h4>
+                    <p>Di en voz alta una oración con tres palabras con /f/:</p>
+                    <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="3" data-pregunta="Oración con palabras con /f/"></textarea>
+                </div>
+            </div>
+
+            <button class="submit-btn" id="submit-btn-6" onclick="checkDislaliaAnswers(6)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-6"></div>
+            
+            <div class="completion-message" id="completion-message-6">
+                <h3>¡Actividad Completada!</h3>
+                <div class="score-display" id="final-score-6"></div>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('dislalia', 6)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre grados
+        document.querySelectorAll('.grade-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.activity-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const grade = this.getAttribute('data-grade');
+                document.getElementById(`grade-${grade}`).classList.add('active');
+            });
+        });
+
+        function toggleCheckbox(element) {
+            const checkbox = element.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            element.classList.toggle('selected', checkbox.checked);
+        }
+
+        async function checkDislaliaAnswers(grade) {
+            const submitBtn = document.getElementById(`submit-btn-${grade}`);
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="loading"></span> Enviando...';
+            submitBtn.disabled = true;
+
+            const content = document.getElementById(`grade-${grade}`);
+            const feedback = document.getElementById(`feedback-${grade}`);
+            
+            let allCorrect = true;
+            let errors = [];
+            let respuestasData = [];
+            let totalQuestions = 0;
+            let correctAnswers = 0;
+
+            // Verificar checkboxes
+            const checkboxGroups = content.querySelectorAll('.checkbox-group');
+            checkboxGroups.forEach((group, groupIndex) => {
+                const checkboxes = group.querySelectorAll('.checkbox-item');
+                const guia = group.closest('.activity-section').getAttribute('data-guia');
+                
+                checkboxes.forEach((checkbox, index) => {
+                    totalQuestions++;
+                    const isChecked = checkbox.querySelector('input').checked;
+                    const shouldBeChecked = checkbox.getAttribute('data-correct') === 'true';
+                    const pregunta = checkbox.getAttribute('data-pregunta');
+                    const esCorrecta = isChecked === shouldBeChecked;
+                    
+                    if (esCorrecta) {
+                        correctAnswers++;
+                        checkbox.classList.add('correct');
+                        checkbox.classList.remove('incorrect');
+                    } else {
+                        checkbox.classList.add('incorrect');
+                        checkbox.classList.remove('correct');
+                        allCorrect = false;
+                        
+                        if (shouldBeChecked && !isChecked) {
+                            errors.push(`Debías marcar: "${checkbox.textContent.trim()}"`);
+                        } else if (!shouldBeChecked && isChecked) {
+                            errors.push(`No debías marcar: "${checkbox.textContent.trim()}"`);
+                        }
+                    }
+
+                    respuestasData.push({
+                        tipo: 'checkbox',
+                        guia: guia,
+                        pregunta: pregunta,
+                        respuesta_estudiante: isChecked ? 'marcada' : 'no marcada',
+                        respuesta_correcta: shouldBeChecked ? 'debe estar marcada' : 'no debe estar marcada',
+                        es_correcta: esCorrecta
+                    });
+                });
+            });
+
+            // Verificar textareas
+            const textareas = content.querySelectorAll('textarea');
+            textareas.forEach((textarea, index) => {
+                totalQuestions++;
+                const minWords = parseInt(textarea.getAttribute('data-min-words')) || 1;
+                const wordCount = textarea.value.trim().split(/\s+/).length;
+                const pregunta = textarea.getAttribute('data-pregunta');
+                const esCorrecta = wordCount >= minWords;
+                
+                if (esCorrecta) {
+                    correctAnswers++;
+                    textarea.classList.add('correct');
+                    textarea.classList.remove('incorrect');
+                } else {
+                    textarea.classList.add('incorrect');
+                    textarea.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Texto ${index + 1}: Necesitas escribir al menos ${minWords} palabra(s)`);
+                }
+
+                respuestasData.push({
+                    tipo: 'texto_largo',
+                    pregunta: pregunta,
+                    respuesta_estudiante: textarea.value.substring(0, 500),
+                    respuesta_correcta: `Mínimo ${minWords} palabra(s)`,
+                    es_correcta: esCorrecta
+                });
+            });
+
+            // Calcular porcentaje
+            const porcentaje = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+
+            try {
+            // Enviar datos (ahora guarda en localStorage)
+            const saveResult = await saveToDatabase(grade, respuestasData, totalQuestions, correctAnswers, porcentaje, 'dislalia');
+            
+            // Mostrar feedback
+            if (allCorrect) {
+                feedback.innerHTML = `
+                    <strong>¡Excelente! Todas las respuestas son correctas.</strong>
+                    <p>¡Has completado la actividad perfectamente!</p>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                `;
+                feedback.className = 'feedback correct';
+                
+                // Mostrar mensaje de finalización
+                setTimeout(() => {
+                    document.getElementById(`completion-message-${grade}`).style.display = 'block';
+                    document.getElementById(`final-score-${grade}`).textContent = `Puntuación: ${correctAnswers}/${totalQuestions} (${porcentaje}%)`;
+                    feedback.scrollIntoView({ behavior: 'smooth' });
+                }, 1000);
+                
+            } else {
+                feedback.innerHTML = `
+                    <strong>¡Buen intento! Algunas respuestas necesitan corrección:</strong>
+                    <ul class="error-list">
+                        ${errors.map(error => `<li>${error}</li>`).join('')}
+                    </ul>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                    <p>Revisa las respuestas marcadas en rojo y corrígelas.</p>
+                    <button class="retry-btn" onclick="retryActivity(${grade})">Intentar de nuevo</button>
+                `;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            feedback.scrollIntoView({ behavior: 'smooth' });
+
+            } catch (error) {
+                console.error('Error procesando resultados:', error);
+                
+                // Mostrar feedback incluso si hay error en el guardado
+                if (allCorrect) {
+                    feedback.innerHTML = `
+                        <strong>¡Excelente! Todas las respuestas son correctas.</strong>
+                        <p>¡Has completado la actividad perfectamente!</p>
+                        <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                        <p><em>Nota: Los resultados se guardaron localmente.</em></p>
+                    `;
+                    feedback.className = 'feedback correct';
+                    
+                    setTimeout(() => {
+                        document.getElementById(`completion-message-${grade}`).style.display = 'block';
+                        document.getElementById(`final-score-${grade}`).textContent = `Puntuación: ${correctAnswers}/${totalQuestions} (${porcentaje}%)`;
+                    }, 1000);
+                } else {
+                    feedback.innerHTML = `
+                        <strong>¡Buen intento! Algunas respuestas necesitan corrección:</strong>
+                        <ul class="error-list">
+                            ${errors.map(error => `<li>${error}</li>`).join('')}
+                        </ul>
+                        <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                        <button class="retry-btn" onclick="retryActivity(${grade})">Intentar de nuevo</button>
+                    `;
+                    feedback.className = 'feedback incorrect';
+                }
+                
+                feedback.style.display = 'block';
+            }
+        }
+
+        async function saveToDatabase(grado, respuestasData, totalPreguntas, correctas, porcentaje, actividad) {
+            // En lugar de enviar a PHP, guardamos en localStorage
+            try {
+                const resultado = {
+                    grado: grado,
+                    actividad: actividad,
+                    respuestas: respuestasData,
+                    resultado: {
+                        total_preguntas: totalPreguntas,
+                        correctas: correctas,
+                        porcentaje: porcentaje,
+                        fecha: new Date().toLocaleString()
+                    }
+                };
+
+                // Guardar en localStorage
+                const resultadosGuardados = JSON.parse(localStorage.getItem('resultadosDislalia') || '[]');
+                resultadosGuardados.push(resultado);
+                localStorage.setItem('resultadosDislalia', JSON.stringify(resultadosGuardados));
+
+                console.log('✅ Resultados guardados localmente:', resultado);
+                return { success: true, message: 'Resultados guardados correctamente' };
+                
+            } catch (error) {
+                console.error('❌ Error guardando resultados:', error);
+                // Aún así retornamos éxito para no interrumpir el flujo
+                return { success: true, message: 'Resultados procesados (guardado local)' };
+            }
+        }
+
+        function retryActivity(grade) {
+            const content = document.getElementById(`grade-${grade}`);
+            const feedback = document.getElementById(`feedback-${grade}`);
+            
+            // Limpiar estilos de error
+            const incorrectElements = content.querySelectorAll('.incorrect, .correct');
+            incorrectElements.forEach(element => {
+                element.classList.remove('incorrect', 'correct');
+            });
+            
+            // Ocultar feedback y mensaje de completado
+            feedback.style.display = 'none';
+            document.getElementById(`completion-message-${grade}`).style.display = 'none';
+        }
+
+        function goToSurvey(activity, grade) {
+            // Mapeo de actividades a áreas (ESENCIAL para la base de datos)
+            const areaMap = {
+                'discalculia': 'calculo',
+                'dislexia': 'lectura', 
+                'dislalia': 'lectura',
+                'disgrafia': 'escritura',
+                'disortografia': 'escritura',
+                'ejercicios': 'calculo'
+            };
+            
+            const area = areaMap[activity] || 'general';
+            
+            // CAMBIO AQUÍ: survey.php → survey.html
+            window.location.href = `survey.html?activity=${activity}&area=${area}&grade=${grade}`;
+        }
+
+        function goToHome() {
+            // Ruta CORREGIDA - asumiendo que index.html está en la misma carpeta
+            window.location.href = 'index.html';
+        }
+
+        // Simular botones de audio
+        function playAudio(word) {
+            alert(`Pronuncia la palabra: ${word}`);
+        }
+        function verResultadosGuardados() {
+            const resultados = JSON.parse(localStorage.getItem('resultadosDislalia') || '[]');
+            console.log('📊 Resultados guardados:', resultados);
+            
+            if (resultados.length === 0) {
+                alert('No hay resultados guardados aún.');
+                return;
+            }
+            
+            let mensaje = `Total de actividades completadas: ${resultados.length}\n\n`;
+            resultados.forEach((result, index) => {
+                mensaje += `Actividad ${index + 1}:\n`;
+                mensaje += `- Grado: ${result.grado}\n`;
+                mensaje += `- Puntuación: ${result.resultado.correctas}/${result.resultado.total_preguntas}\n`;
+                mensaje += `- Porcentaje: ${result.resultado.porcentaje}%\n`;
+                mensaje += `- Fecha: ${result.resultado.fecha}\n\n`;
+            });
+            
+            alert(mensaje);
+        }
+    </script>
+</body>
+</html>

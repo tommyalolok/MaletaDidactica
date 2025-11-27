@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Disgrafía - Maleta Didáctica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: #0984e3;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .grade-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .grade-btn {
+            background: #0984e3;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .grade-btn:hover, .grade-btn.active {
+            background: #0770c4;
+            transform: translateY(-2px);
+        }
+
+        .activity-content {
+            display: none;
+        }
+
+        .activity-content.active {
+            display: block;
+        }
+
+        .activity-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #0984e3;
+        }
+
+        .activity-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .objective {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #0984e3;
+        }
+
+        .exercise {
+            margin-bottom: 25px;
+        }
+
+        .exercise h4 {
+            color: #0984e3;
+            margin-bottom: 15px;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .word-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .input-field.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .input-field.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            margin: 10px 0;
+        }
+
+        .text-area.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .text-area.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .error-list li {
+            margin: 8px 0;
+            color: #721c24;
+        }
+
+        .correct-answer {
+            color: #155724;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background: #d1ecf1;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border: 2px solid #bee5eb;
+        }
+
+        .survey-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .survey-btn.yes {
+            background: #28a745;
+            color: white;
+        }
+
+        .survey-btn.no {
+            background: #6c757d;
+            color: white;
+        }
+
+        .survey-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .retry-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .retry-btn:hover {
+            background: #e0a800;
+        }
+
+        .instruction {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .motor-exercise {
+            background: #fff3cd;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border-left: 4px solid #ffc107;
+        }
+
+        .tracing-area {
+            background: white;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 200px;
+        }
+
+        .letter-practice {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .letter-box {
+            width: 80px;
+            height: 80px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            background: white;
+        }
+
+        .sentence-ordering {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .sentence-item {
+            padding: 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: move;
+        }
+
+        .sentence-item.dragging {
+            opacity: 0.5;
+        }
+
+        .drop-zone {
+            border: 2px dashed #0984e3;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            min-height: 100px;
+            background: #f8f9fa;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ejercicios de Disgrafía</h1>
+            <p>Actividades para mejorar la escritura y caligrafía</p>
+        </header>
+
+        <a href="../index.html" class="back-btn">← Volver al Inicio</a>
+
+        <!-- Selector de Grado -->
+        <div class="grade-selector">
+            <div class="grade-btn active" data-grade="3">3° Básico</div>
+            <div class="grade-btn" data-grade="4">4° Básico</div>
+            <div class="grade-btn" data-grade="5">5° Básico</div>
+            <div class="grade-btn" data-grade="6">6° Básico</div>
+        </div>
+
+        <!-- 3° Básico -->
+        <div id="grade-3" class="activity-content active">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disgrafía 3° Básico - Guía 1">
+                <h3>Guía 1: Disgrafía - 3° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>Calentamiento Motor: "Despierto mis manos"</h4>
+                    <div class="objective">
+                        <strong>Propósito:</strong> Activar músculos de dedos y manos antes de escribir.
+                    </div>
+                    
+                    <div class="motor-exercise">
+                        <p><strong>Instrucciones:</strong></p>
+                        <ol>
+                            <li>Abrir y cerrar las manos rápido (10 veces).</li>
+                            <li>Estirar dedos como si fueran "garras" (10 seg).</li>
+                            <li>Hacer círculos de muñeca hacia ambos lados (10 y 10).</li>
+                            <li>"Caminar" con los dedos sobre la mesa por 30 segundos.</li>
+                        </ol>
+                        <button class="audio-btn" onclick="startMotorExercise()">Iniciar Ejercicio</button>
+                        <div id="motor-timer" style="margin-top: 10px; display: none;">
+                            <p>Tiempo restante: <span id="timer">30</span> segundos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>Actividad de trazos: Sigo el camino</h4>
+                    <div class="objective">
+                        <strong>Propósito:</strong> Mejorar direccionalidad y control del lápiz.
+                    </div>
+                    
+                    <div class="tracing-area" id="tracing-area-1">
+                        <p><strong>Instrucciones:</strong></p>
+                        <ol>
+                            <li>Traza líneas rectas siguiendo los puntos:</li>
+                            <div style="text-align: center; margin: 15px 0;">
+                                • —— • —— • —— •<br>
+                                • —— • —— • —— •
+                            </div>
+                            <li>Traza curvas siguiendo los puntos:</li>
+                            <div style="text-align: center; margin: 15px 0;">
+                                • ~~~ • ~~~ • ~~~ •<br>
+                                • ~~~ • ~~~ • ~~~ •
+                            </div>
+                            <li>Copia los siguientes patrones:</li>
+                            <div style="text-align: center; margin: 15px 0; font-family: 'Courier New', monospace;">
+                                /\/\/\/\/\<br>
+                                ~~~~~~~~~~<br>
+                                | | | | | |
+                            </div>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disgrafía 3° Básico - Guía 2">
+                <h3>Guía 2: Disgrafía - 3° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>"Armo y escribo"</h4>
+                    <div class="objective">
+                        <strong>Objetivo:</strong> Ordenar sílabas correctamente antes de escribir.
+                    </div>
+                    
+                    <p class="instruction">Une las sílabas para formar palabras:</p>
+                    
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>ma + no →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="mano">
+                        </div>
+                        <div class="word-item">
+                            <label>pe + lo →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="pelo">
+                        </div>
+                        <div class="word-item">
+                            <label>ca + sa →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="casa">
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Escribe cada palabra 3 veces:</p>
+                        <div class="word-list">
+                            <div class="word-item">
+                                <label>mano:</label>
+                                <input type="text" class="input-field" placeholder="Escribe 3 veces" data-min-words="3">
+                            </div>
+                            <div class="word-item">
+                                <label>pelo:</label>
+                                <input type="text" class="input-field" placeholder="Escribe 3 veces" data-min-words="3">
+                            </div>
+                            <div class="word-item">
+                                <label>casa:</label>
+                                <input type="text" class="input-field" placeholder="Escribe 3 veces" data-min-words="3">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Inventa una oración con una de las palabras:</p>
+                        <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="3"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(3)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-3"></div>
+            
+            <!-- Mensaje de finalización -->
+            <div class="completion-message" id="completion-message-3">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-3"></p>
+                <p>¿Te gustaría completar la encuesta de satisfacción?</p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disgrafia', 3)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4° Básico -->
+        <div id="grade-4" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disgrafía 4° Básico - Guía 1">
+                <h3>Guía 1: Disgrafía - 4° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>Copia Funcional: "Copio con atención"</h4>
+                    
+                    <p class="instruction">Copia las siguientes oraciones cuidando la ortografía, letra clara, espacios correctos y tamaño uniforme:</p>
+                    
+                    <div class="exercise">
+                        <p><strong>Oración 1:</strong> "Los animales del bosque viven en armonía y cada uno cumple un rol importante."</p>
+                        <textarea class="text-area" placeholder="Copia la oración aquí..." data-min-words="10"></textarea>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p><strong>Oración 2:</strong> "El viento soplaba fuerte entre los árboles del parque."</p>
+                        <textarea class="text-area" placeholder="Copia la oración aquí..." data-min-words="8"></textarea>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p><strong>Oración 3:</strong> "Ayer aprendimos sobre los planetas y sus movimientos en el espacio."</p>
+                        <textarea class="text-area" placeholder="Copia la oración aquí..." data-min-words="9"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disgrafía 4° Básico - Guía 2">
+                <h3>Guía 2: Disgrafía - 4° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>Actividad de Letras y Palabras: "Corrijo y mejoro"</h4>
+                    <div class="objective">
+                        <strong>Propósito:</strong> Trabajar letras difíciles y evitar inversiones o deformaciones.
+                    </div>
+                    
+                    <p class="instruction"><strong>Letras a reforzar:</strong> b – d – g – p – q – s</p>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Trazar cada letra 3 veces en grande y 3 veces en tamaño normal:</p>
+                        <div class="letter-practice">
+                            <div class="letter-box" data-letter="b">b</div>
+                            <div class="letter-box" data-letter="d">d</div>
+                            <div class="letter-box" data-letter="g">g</div>
+                            <div class="letter-box" data-letter="p">p</div>
+                            <div class="letter-box" data-letter="q">q</div>
+                            <div class="letter-box" data-letter="s">s</div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Escribe una palabra que comience con cada letra:</p>
+                        <div class="word-list">
+                            <div class="word-item">
+                                <label>b:</label>
+                                <input type="text" class="input-field" placeholder="Ej: barco" data-correct="barco">
+                            </div>
+                            <div class="word-item">
+                                <label>d:</label>
+                                <input type="text" class="input-field" placeholder="Ej: dedo" data-correct="dedo">
+                            </div>
+                            <div class="word-item">
+                                <label>g:</label>
+                                <input type="text" class="input-field" placeholder="Ej: gato" data-correct="gato">
+                            </div>
+                            <div class="word-item">
+                                <label>p:</label>
+                                <input type="text" class="input-field" placeholder="Ej: perro" data-correct="perro">
+                            </div>
+                            <div class="word-item">
+                                <label>q:</label>
+                                <input type="text" class="input-field" placeholder="Ej: queso" data-correct="queso">
+                            </div>
+                            <div class="word-item">
+                                <label>s:</label>
+                                <input type="text" class="input-field" placeholder="Ej: sol" data-correct="sol">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(4)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-4"></div>
+            
+            <div class="completion-message" id="completion-message-4">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-4"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disgrafia', 4)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5° Básico -->
+        <div id="grade-5" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disgrafía 5° Básico - Guía 1">
+                <h3>Guía 1: Disgrafía - 5° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>Orden de oraciones: "Organizo la información"</h4>
+                    <div class="objective">
+                        <strong>Propósito:</strong> Fortalecer coherencia y secuencia lógica.
+                    </div>
+                    
+                    <p class="instruction">Ordena las siguientes oraciones para formar un párrafo coherente:</p>
+                    
+                    <div class="sentence-ordering" id="sentences-container">
+                        <div class="sentence-item" draggable="true" data-order="2">"Al llegar, vimos varias especies de aves y algunos peces."</div>
+                        <div class="sentence-item" draggable="true" data-order="1">"El viernes fuimos al humedal con nuestro curso."</div>
+                        <div class="sentence-item" draggable="true" data-order="3">"Luego, la guía nos explicó la importancia de cuidar estos ecosistemas."</div>
+                        <div class="sentence-item" draggable="true" data-order="4">"Aprendimos que muchos animales dependen del agua limpia para sobrevivir."</div>
+                    </div>
+                    
+                    <div class="drop-zone" id="drop-zone">
+                        <p>Arrastra las oraciones aquí en el orden correcto</p>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Copia el párrafo final con letra clara:</p>
+                        <textarea class="text-area" placeholder="Escribe el párrafo ordenado aquí..." data-min-words="15"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disgrafía 5° Básico - Guía 2">
+                <h3>Guía 2: Disgrafía - 5° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>Caligrafía y formas complejas: "Perfecciono mi letra"</h4>
+                    <div class="objective">
+                        <strong>Propósito:</strong> Fortalecer trazos necesarios para escritura clara y cursiva si corresponde.
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Practica estas combinaciones de letras:</p>
+                        <div class="tracing-area">
+                            <p><strong>tr – pr – br – dr – fr – gr – cr</strong></p>
+                            <p>Traza cada combinación 3 veces:</p>
+                            <div style="font-family: 'Courier New', monospace; line-height: 2;">
+                                tr tr tr ______<br>
+                                pr pr pr ______<br>
+                                br br br ______<br>
+                                dr dr dr ______<br>
+                                fr fr fr ______<br>
+                                gr gr gr ______<br>
+                                cr cr cr ______
+                            </div>
+                            
+                            <p><strong>ma – me – mi – mo – mu</strong></p>
+                            <p>Traza cada combinación 3 veces:</p>
+                            <div style="font-family: 'Courier New', monospace; line-height: 2;">
+                                ma ma ma ______<br>
+                                me me me ______<br>
+                                mi mi mi ______<br>
+                                mo mo mo ______<br>
+                                mu mu mu ______
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Copia estas palabras cuidando uniformidad:</p>
+                        <div class="word-list">
+                            <div class="word-item">
+                                <label>problema:</label>
+                                <input type="text" class="input-field" placeholder="Copia la palabra" data-correct="problema">
+                            </div>
+                            <div class="word-item">
+                                <label>trabajo:</label>
+                                <input type="text" class="input-field" placeholder="Copia la palabra" data-correct="trabajo">
+                            </div>
+                            <div class="word-item">
+                                <label>gracioso:</label>
+                                <input type="text" class="input-field" placeholder="Copia la palabra" data-correct="gracioso">
+                            </div>
+                            <div class="word-item">
+                                <label>programa:</label>
+                                <input type="text" class="input-field" placeholder="Copia la palabra" data-correct="programa">
+                            </div>
+                            <div class="word-item">
+                                <label>dibujo:</label>
+                                <input type="text" class="input-field" placeholder="Copia la palabra" data-correct="dibujo">
+                            </div>
+                            <div class="word-item">
+                                <label>frontera:</label>
+                                <input type="text" class="input-field" placeholder="Copia la palabra" data-correct="frontera">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise">
+                        <p class="instruction">Escribe una oración con dos de esas palabras:</p>
+                        <textarea class="text-area" placeholder="Escribe tu oración aquí..." data-min-words="5"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(5)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-5"></div>
+            
+            <div class="completion-message" id="completion-message-5">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-5"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disgrafia', 5)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6° Básico -->
+        <div id="grade-6" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disgrafía 6° Básico - Guía 1">
+                <h3>Guía 1: Disgrafía - 6° Básico</h3>
+                
+                <div class="objective">
+                    <strong>Propósito:</strong> Mejorar la claridad, uniformidad y orden en la escritura, junto con la construcción de oraciones más precisas y coherentes.
+                </div>
+                
+                <div class="exercise">
+                    <h4>Completa con precisión</h4>
+                    <p class="instruction">Completa las frases con tu mejor letra:</p>
+                    
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>Cuando escribo, me esfuerzo por</label>
+                            <input type="text" class="input-field" placeholder="Completa la frase" data-min-words="3">
+                        </div>
+                        <div class="word-item">
+                            <label>Algo que me cuesta al escribir es</label>
+                            <input type="text" class="input-field" placeholder="Completa la frase" data-min-words="3">
+                        </div>
+                        <div class="word-item">
+                            <label>Hoy aprendí que puedo mejorar si</label>
+                            <input type="text" class="input-field" placeholder="Completa la frase" data-min-words="3">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disgrafía 6° Básico - Guía 2">
+                <h3>Guía 2: Disgrafía - 6° Básico</h3>
+                
+                <div class="exercise">
+                    <h4>Activación motriz – "Control y precisión"</h4>
+                    <div class="objective">
+                        <strong>Propósito:</strong> Desarrollar una escritura legible a través de la regulación del ritmo, la precisión en los trazos y la organización del texto dentro del espacio de trabajo.
+                    </div>
+                    
+                    <div class="motor-exercise">
+                        <p><strong>Instrucciones:</strong> Realiza cada ejercicio 15 veces</p>
+                        <ol>
+                            <li><strong>Golpeteo alternado:</strong> índice izquierdo + índice derecho, repitiendo en ritmo.</li>
+                            <li><strong>Deslizamiento:</strong> mueve el lápiz entre las yemas de los dedos sin soltarlo.</li>
+                            <li><strong>Presión controlada:</strong> aprieta el lápiz con fuerza → suelta → repite.</li>
+                        </ol>
+                        <button class="audio-btn" onclick="startAdvancedMotorExercise()">Iniciar Ejercicio</button>
+                        <div id="advanced-motor-timer" style="margin-top: 10px; display: none;">
+                            <p>Ejercicio: <span id="exercise-name">Golpeteo alternado</span></p>
+                            <p>Repeticiones: <span id="repetitions">0</span>/15</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exercise">
+                    <h4>Ejercicio de escritura controlada</h4>
+                    <p class="instruction">Copia el siguiente texto con atención al ritmo, presión y espaciado:</p>
+                    
+                    <div class="tracing-area">
+                        <p><strong>Texto para copiar:</strong></p>
+                        <p>"La práctica constante de la escritura mejora notablemente la legibilidad y fluidez del texto. Es importante mantener un ritmo uniforme y aplicar la presión adecuada al papel para obtener resultados óptimos."</p>
+                        
+                        <textarea class="text-area" placeholder="Copia el texto aquí..." data-min-words="20"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(6)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-6"></div>
+            
+            <div class="completion-message" id="completion-message-6">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-6"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disgrafia', 6)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre grados
+        document.querySelectorAll('.grade-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.grade-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.activity-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const grade = this.getAttribute('data-grade');
+                document.getElementById(`grade-${grade}`).classList.add('active');
+            });
+        });
+
+        // Funcionalidad para ejercicios motores
+        function startMotorExercise() {
+            const timerElement = document.getElementById('timer');
+            const motorTimer = document.getElementById('motor-timer');
+            motorTimer.style.display = 'block';
+            
+            let timeLeft = 30;
+            timerElement.textContent = timeLeft;
+            
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerElement.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    alert('¡Ejercicio completado!');
+                    motorTimer.style.display = 'none';
+                }
+            }, 1000);
+        }
+
+        function startAdvancedMotorExercise() {
+            const exerciseName = document.getElementById('exercise-name');
+            const repetitions = document.getElementById('repetitions');
+            const advancedMotorTimer = document.getElementById('advanced-motor-timer');
+            advancedMotorTimer.style.display = 'block';
+            
+            const exercises = [
+                'Golpeteo alternado',
+                'Deslizamiento',
+                'Presión controlada'
+            ];
+            
+            let currentExercise = 0;
+            let currentRepetitions = 0;
+            
+            exerciseName.textContent = exercises[currentExercise];
+            repetitions.textContent = currentRepetitions;
+            
+            const exerciseInterval = setInterval(() => {
+                currentRepetitions++;
+                repetitions.textContent = currentRepetitions;
+                
+                if (currentRepetitions >= 15) {
+                    currentRepetitions = 0;
+                    currentExercise++;
+                    
+                    if (currentExercise >= exercises.length) {
+                        clearInterval(exerciseInterval);
+                        alert('¡Todos los ejercicios completados!');
+                        advancedMotorTimer.style.display = 'none';
+                        return;
+                    }
+                    
+                    exerciseName.textContent = exercises[currentExercise];
+                    repetitions.textContent = currentRepetitions;
+                }
+            }, 1000);
+        }
+
+        // Funcionalidad de arrastrar y soltar para ordenar oraciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const dropZone = document.getElementById('drop-zone');
+            if (dropZone) {
+                const sentences = document.querySelectorAll('.sentence-item');
+                
+                sentences.forEach(sentence => {
+                    sentence.addEventListener('dragstart', function(e) {
+                        e.dataTransfer.setData('text/plain', this.id);
+                        this.classList.add('dragging');
+                    });
+                    
+                    sentence.addEventListener('dragend', function() {
+                        this.classList.remove('dragging');
+                    });
+                });
+                
+                dropZone.addEventListener('dragover', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#e9ecef';
+                });
+                
+                dropZone.addEventListener('dragleave', function() {
+                    this.style.backgroundColor = '#f8f9fa';
+                });
+                
+                dropZone.addEventListener('drop', function(e) {
+                    e.preventDefault();
+                    this.style.backgroundColor = '#f8f9fa';
+                    
+                    const id = e.dataTransfer.getData('text/plain');
+                    const draggable = document.getElementById(id);
+                    
+                    if (draggable) {
+                        this.appendChild(draggable);
+                    }
+                });
+            }
+        });
+
+        function checkAnswers(grade) {
+            const feedback = document.getElementById(`feedback-${grade}`);
+            const content = document.getElementById(`grade-${grade}`);
+            let allCorrect = true;
+            let errors = [];
+            let totalQuestions = 0;
+            let correctAnswers = 0;
+
+            // Verificar inputs de texto
+            const textInputs = content.querySelectorAll('input[type="text"]');
+            textInputs.forEach((input, index) => {
+                totalQuestions++;
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct') ? input.getAttribute('data-correct').toLowerCase() : null;
+                
+                if (correctAnswer) {
+                    if (userAnswer === correctAnswer) {
+                        input.classList.add('correct');
+                        input.classList.remove('incorrect');
+                        correctAnswers++;
+                    } else {
+                        input.classList.add('incorrect');
+                        input.classList.remove('correct');
+                        allCorrect = false;
+                        errors.push(`Ejercicio ${index + 1}: La respuesta correcta es: <span class="correct-answer">${correctAnswer}</span>`);
+                    }
+                } else {
+                    // Para ejercicios sin respuesta específica, solo verificar que se escribió algo
+                    const minWords = parseInt(input.getAttribute('data-min-words')) || 1;
+                    const wordCount = input.value.trim().split(/\s+/).length;
+                    
+                    if (wordCount >= minWords) {
+                        input.classList.add('correct');
+                        input.classList.remove('incorrect');
+                        correctAnswers++;
+                    } else {
+                        input.classList.add('incorrect');
+                        input.classList.remove('correct');
+                        allCorrect = false;
+                        errors.push(`Ejercicio ${index + 1}: Necesitas escribir al menos ${minWords} palabra(s)`);
+                    }
+                }
+            });
+
+            // Verificar textareas
+            const textareas = content.querySelectorAll('textarea');
+            textareas.forEach((textarea, index) => {
+                totalQuestions++;
+                const minWords = parseInt(textarea.getAttribute('data-min-words')) || 10;
+                const wordCount = textarea.value.trim().split(/\s+/).length;
+                
+                if (wordCount >= minWords) {
+                    textarea.classList.add('correct');
+                    textarea.classList.remove('incorrect');
+                    correctAnswers++;
+                } else {
+                    textarea.classList.add('incorrect');
+                    textarea.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Texto ${index + 1}: Necesitas escribir al menos ${minWords} palabras`);
+                }
+            });
+
+            // Calcular porcentaje
+            const porcentaje = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+
+            // Mostrar feedback
+            if (allCorrect) {
+                feedback.innerHTML = `
+                    <strong>¡Excelente! Todas las respuestas son correctas.</strong>
+                    <p>¡Has completado la actividad perfectamente!</p>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                `;
+                feedback.className = 'feedback correct';
+                
+                // Mostrar mensaje de finalización después de 2 segundos
+                setTimeout(() => {
+                    document.getElementById(`completion-message-${grade}`).style.display = 'block';
+                    document.getElementById(`final-score-${grade}`).textContent = `Puntuación: ${correctAnswers}/${totalQuestions} (${porcentaje}%)`;
+                    feedback.scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+                
+            } else {
+                feedback.innerHTML = `
+                    <strong>¡Oh no! Te equivocaste en algunas respuestas:</strong>
+                    <ul class="error-list">
+                        ${errors.map(error => `<li>${error}</li>`).join('')}
+                    </ul>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                    <p>Revisa las respuestas marcadas en rojo y corrígelas.</p>
+                    <button class="retry-btn" onclick="retryActivity(${grade})">Intentar de nuevo</button>
+                `;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            feedback.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retryActivity(grade) {
+            const content = document.getElementById(`grade-${grade}`);
+            const feedback = document.getElementById(`feedback-${grade}`);
+            
+            // Limpiar estilos de error
+            const incorrectElements = content.querySelectorAll('.incorrect, .correct');
+            incorrectElements.forEach(element => {
+                element.classList.remove('incorrect', 'correct');
+            });
+            
+            // Ocultar feedback
+            feedback.style.display = 'none';
+            
+            // Ocultar mensaje de completado
+            document.getElementById(`completion-message-${grade}`).style.display = 'none';
+        }
+
+        function goToSurvey(activity, grade) {
+            // Mapeo de actividades a áreas (ESENCIAL para la base de datos)
+            const areaMap = {
+                'discalculia': 'calculo',
+                'dislexia': 'lectura', 
+                'dislalia': 'lectura',
+                'disgrafia': 'escritura',
+                'disortografia': 'escritura',
+                'ejercicios': 'calculo'
+            };
+            
+            const area = areaMap[activity] || 'general';
+            
+            // CAMBIO AQUÍ: survey.php → survey.html
+            window.location.href = `survey.html?activity=${activity}&area=${area}&grade=${grade}`;
+        }
+
+        function goToHome() {
+            // Ruta CORREGIDA - asumiendo que index.html está en la misma carpeta
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>

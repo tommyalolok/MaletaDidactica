@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ejercicios de Disortografía - Maleta Didáctica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #6a89cc 0%, #4a69bd 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: #4a69bd;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .back-btn {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-bottom: 30px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .back-btn:hover {
+            background: #5a6268;
+        }
+
+        .grade-selector {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .grade-btn {
+            background: #4a69bd;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .grade-btn:hover, .grade-btn.active {
+            background: #3c5aa8;
+            transform: translateY(-2px);
+        }
+
+        .activity-content {
+            display: none;
+        }
+
+        .activity-content.active {
+            display: block;
+        }
+
+        .activity-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #4a69bd;
+        }
+
+        .activity-section h3 {
+            color: #495057;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+
+        .objective {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #4a69bd;
+        }
+
+        .word-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .word-item {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #dee2e6;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 1em;
+        }
+
+        .input-field.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .input-field.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .option {
+            padding: 12px;
+            background: white;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #4a69bd;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 120px;
+            padding: 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            margin: 10px 0;
+        }
+
+        .text-area.correct {
+            border-color: #28a745;
+            background-color: #f8fff9;
+        }
+
+        .text-area.incorrect {
+            border-color: #dc3545;
+            background-color: #fff8f8;
+        }
+
+        .submit-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        .submit-btn:hover {
+            background: #218838;
+        }
+
+        .feedback {
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+        }
+
+        .feedback.correct {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .feedback.incorrect {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .error-list {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        .error-list li {
+            margin: 8px 0;
+            color: #721c24;
+        }
+
+        .correct-answer {
+            color: #155724;
+            font-weight: bold;
+            margin-left: 5px;
+        }
+
+        .completion-message {
+            text-align: center;
+            padding: 30px;
+            background: #d1ecf1;
+            border-radius: 10px;
+            margin: 20px 0;
+            display: none;
+            border: 2px solid #bee5eb;
+        }
+
+        .survey-options {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .survey-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+
+        .survey-btn.yes {
+            background: #28a745;
+            color: white;
+        }
+
+        .survey-btn.no {
+            background: #6c757d;
+            color: white;
+        }
+
+        .survey-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .retry-btn {
+            background: #ffc107;
+            color: #212529;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .retry-btn:hover {
+            background: #e0a800;
+        }
+
+        .instruction {
+            color: #666;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .matching-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .matching-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .matching-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .matching-option {
+            padding: 8px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .matching-option:hover {
+            border-color: #4a69bd;
+        }
+
+        .matching-option.selected {
+            background: #e3f2fd;
+            border-color: #4a69bd;
+        }
+
+        .matching-option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+        }
+
+        .matching-option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Ejercicios de Disortografía</h1>
+            <p>Actividades para mejorar la escritura y ortografía</p>
+        </header>
+
+        <a href="../index.html" class="back-btn">← Volver al Inicio</a>
+
+        <!-- Selector de Grado -->
+        <div class="grade-selector">
+            <div class="grade-btn active" data-grade="3">3° Básico</div>
+            <div class="grade-btn" data-grade="4">4° Básico</div>
+            <div class="grade-btn" data-grade="5">5° Básico</div>
+            <div class="grade-btn" data-grade="6">6° Básico</div>
+        </div>
+
+        <!-- 3° Básico -->
+        <div id="grade-3" class="activity-content active">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disortografía 3° Básico - Guía 1">
+                <h3>Guía 1: Disortografía - 3° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Trabajar errores frecuentes en escritura: inversión de letras, omisión de sonidos y confusión b/v -- c/s/z.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Une la palabra correcta con la imagen</h4>
+                    <div class="matching-container">
+                        <div class="matching-item">
+                            <span>Imagen: Animal con manchas</span>
+                            <div class="matching-options">
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="vaca">vaca</div>
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="baca">baca</div>
+                            </div>
+                        </div>
+                        <div class="matching-item">
+                            <span>Imagen: Edificio para vivir</span>
+                            <div class="matching-options">
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="casa">casa</div>
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="caza">caza</div>
+                            </div>
+                        </div>
+                        <div class="matching-item">
+                            <span>Imagen: Calzado</span>
+                            <div class="matching-options">
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="bota">bota</div>
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="vota">vota</div>
+                            </div>
+                        </div>
+                        <div class="matching-item">
+                            <span>Imagen: Anfibio verde</span>
+                            <div class="matching-options">
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="sapo">sapo</div>
+                                <div class="matching-option" onclick="selectOption(this)" data-correct="zapo">zapo</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Completa las palabras con la letra correcta (b/v)</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>_ _ ota</label>
+                            <input type="text" class="input-field" placeholder="Escribe b o v" data-correct="b">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ enir</label>
+                            <input type="text" class="input-field" placeholder="Escribe b o v" data-correct="v">
+                        </div>
+                        <div class="word-item">
+                            <label>ca_ _ allo</label>
+                            <input type="text" class="input-field" placeholder="Escribe b o v" data-correct="b">
+                        </div>
+                        <div class="word-item">
+                            <label>a_ _ ión</label>
+                            <input type="text" class="input-field" placeholder="Escribe b o v" data-correct="b">
+                        </div>
+                        <div class="word-item">
+                            <label>nue_ _ e</label>
+                            <input type="text" class="input-field" placeholder="Escribe b o v" data-correct="v">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Corrige las palabras</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>sapato →</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="zapato">
+                        </div>
+                        <div class="word-item">
+                            <label>cassa →</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="casa">
+                        </div>
+                        <div class="word-item">
+                            <label>bibo →</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="vivo">
+                        </div>
+                        <div class="word-item">
+                            <label>trabagar →</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="trabajar">
+                        </div>
+                        <div class="word-item">
+                            <label>solado →</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="soldado">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disortografía 3° Básico - Guía 2">
+                <h3>Guía 2: Disortografía - 3° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Trabajar confusión de fonemas, omisión de letras y segmentación de palabras.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Completa la palabra con la letra correcta</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>_ato (g/j)</label>
+                            <input type="text" class="input-field" placeholder="Escribe g o j" data-correct="g">
+                        </div>
+                        <div class="word-item">
+                            <label>_ebra (c/z)</label>
+                            <input type="text" class="input-field" placeholder="Escribe c o z" data-correct="c">
+                        </div>
+                        <div class="word-item">
+                            <label>_arza (s/z)</label>
+                            <input type="text" class="input-field" placeholder="Escribe s o z" data-correct="z">
+                        </div>
+                        <div class="word-item">
+                            <label>_ueco (b/v)</label>
+                            <input type="text" class="input-field" placeholder="Escribe b o v" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_apato (s/z)</label>
+                            <input type="text" class="input-field" placeholder="Escribe s o z" data-correct="z">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Separa correctamente las palabras juntas</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>lahola →</label>
+                            <input type="text" class="input-field" placeholder="Escribe separado" data-correct="la ola">
+                        </div>
+                        <div class="word-item">
+                            <label>mitarea →</label>
+                            <input type="text" class="input-field" placeholder="Escribe separado" data-correct="mi tarea">
+                        </div>
+                        <div class="word-item">
+                            <label>melollamo →</label>
+                            <input type="text" class="input-field" placeholder="Escribe separado" data-correct="me llamo">
+                        </div>
+                        <div class="word-item">
+                            <label>laprofesora →</label>
+                            <input type="text" class="input-field" placeholder="Escribe separado" data-correct="la profesora">
+                        </div>
+                        <div class="word-item">
+                            <label>unaniña →</label>
+                            <input type="text" class="input-field" placeholder="Escribe separado" data-correct="una niña">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Escribe la palabra correcta según el dibujo</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>Dibujo: sol →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="sol">
+                        </div>
+                        <div class="word-item">
+                            <label>Dibujo: vela →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="vela">
+                        </div>
+                        <div class="word-item">
+                            <label>Dibujo: oso →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="oso">
+                        </div>
+                        <div class="word-item">
+                            <label>Dibujo: mesa →</label>
+                            <input type="text" class="input-field" placeholder="Escribe la palabra" data-correct="mesa">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(3)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-3"></div>
+            
+            <!-- Mensaje de finalización -->
+            <div class="completion-message" id="completion-message-3">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-3"></p>
+                <p>¿Te gustaría completar la encuesta de satisfacción?</p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disortografia', 3)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4° Básico -->
+        <div id="grade-4" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disortografía 4° Básico - Guía 1">
+                <h3>Guía 1: Disortografía - 4° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Reforzar reglas ortográficas básicas: uso de g/j -- ll/y -- s/c/z.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Escribe la palabra correcta</h4>
+                    <div class="options-group">
+                        <div class="option">
+                            <input type="radio" name="word1" value="jirafa" data-correct="true"> jirafa
+                            <input type="radio" name="word1" value="girafa"> girafa
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="word2" value="lluvia" data-correct="true"> lluvia
+                            <input type="radio" name="word2" value="yuvia"> yuvia
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="word3" value="azul" data-correct="true"> azul
+                            <input type="radio" name="word3" value="asul"> asul
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="word4" value="cereza" data-correct="true"> cereza
+                            <input type="radio" name="word4" value="seresa"> seresa
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="word5" value="hijo" data-correct="true"> hijo
+                            <input type="radio" name="word5" value="hico"> hico
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Completa con G o J</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>_ _ ato</label>
+                            <input type="text" class="input-field" placeholder="Escribe g o j" data-correct="g">
+                        </div>
+                        <div class="word-item">
+                            <label>via_ _ e</label>
+                            <input type="text" class="input-field" placeholder="Escribe g o j" data-correct="j">
+                        </div>
+                        <div class="word-item">
+                            <label>re_ _ ir</label>
+                            <input type="text" class="input-field" placeholder="Escribe g o j" data-correct="g">
+                        </div>
+                        <div class="word-item">
+                            <label>e_ _ emplo</label>
+                            <input type="text" class="input-field" placeholder="Escribe g o j" data-correct="j">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ irafa</label>
+                            <input type="text" class="input-field" placeholder="Escribe g o j" data-correct="j">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Reescribe correctamente</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>La yegua llebaba un yeque.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="La yegua llevaba un yegue">
+                        </div>
+                        <div class="word-item">
+                            <label>Mi ermana cose una blusa asúl.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Mi hermana cose una blusa azul">
+                        </div>
+                        <div class="word-item">
+                            <label>Yo rejalo juguetes en navida.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Yo regalo juguetes en navidad">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disortografía 4° Básico - Guía 2">
+                <h3>Guía 2: Disortografía - 4° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Uso de g/j, ll/y, s/c/z y ortografía natural.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Elige la palabra correcta</h4>
+                    <div class="options-group">
+                        <div class="option">
+                            <input type="radio" name="choice1" value="jirafa" data-correct="true"> jirafa
+                            <input type="radio" name="choice1" value="girafa"> girafa
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="choice2" value="acelerar" data-correct="true"> acelerar
+                            <input type="radio" name="choice2" value="aselerar"> aselerar
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="choice3" value="yema" data-correct="true"> yema
+                            <input type="radio" name="choice3" value="llema"> llema
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="choice4" value="cansado" data-correct="true"> cansado
+                            <input type="radio" name="choice4" value="cansa2do"> cansa2do
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="choice5" value="cerezo" data-correct="true"> cerezo
+                            <input type="radio" name="choice5" value="sereso"> sereso
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Completa con LL o Y</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>cami_ _ o</label>
+                            <input type="text" class="input-field" placeholder="Escribe ll o y" data-correct="ll">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ uvia</label>
+                            <input type="text" class="input-field" placeholder="Escribe ll o y" data-correct="ll">
+                        </div>
+                        <div class="word-item">
+                            <label>po_ _ o</label>
+                            <input type="text" class="input-field" placeholder="Escribe ll o y" data-correct="ll">
+                        </div>
+                        <div class="word-item">
+                            <label>a_ _ er</label>
+                            <input type="text" class="input-field" placeholder="Escribe ll o y" data-correct="y">
+                        </div>
+                        <div class="word-item">
+                            <label>brí_ _ o</label>
+                            <input type="text" class="input-field" placeholder="Escribe ll o y" data-correct="ll">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Reescribe correctamente las oraciones</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>La jente yevó sus llebros al yardin.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="La gente llevó sus libros al jardín">
+                        </div>
+                        <div class="word-item">
+                            <label>Mi amijo dise que va a benir.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Mi amigo dice que va a venir">
+                        </div>
+                        <div class="word-item">
+                            <label>Yo yevé la ropa sucia al labadero.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Yo llevé la ropa sucia al lavadero">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(4)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-4"></div>
+            
+            <div class="completion-message" id="completion-message-4">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-4"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disortografia', 4)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5° Básico -->
+        <div id="grade-5" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disortografía 5° Básico - Guía 1">
+                <h3>Guía 1: Disortografía - 5° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Aplicar reglas: uso de h, x, tilde, homófonas.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Agrega la H donde corresponda</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>_ _ ablar</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ uevo</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ ace mucho calor</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ ierba</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ onestidad</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Palabras que suenan igual: elige la correcta</h4>
+                    <div class="options-group">
+                        <div class="option">
+                            <input type="radio" name="homofono1" value="Hola" data-correct="true"> Hola
+                            <input type="radio" name="homofono1" value="Ola"> Ola
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="homofono2" value="Hecho" data-correct="true"> Hecho
+                            <input type="radio" name="homofono2" value="Echo"> Echo
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="homofono3" value="Haya" data-correct="true"> Haya
+                            <input type="radio" name="homofono3" value="Halla"> Halla
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="homofono4" value="Vaca" data-correct="true"> Vaca
+                            <input type="radio" name="homofono4" value="Baca"> Baca
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="homofono5" value="Cocer" data-correct="true"> Cocer
+                            <input type="radio" name="homofono5" value="Coser"> Coser
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Agrega tildes cuando sea necesario</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>El arbol es muy alto.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="El árbol es muy alto">
+                        </div>
+                        <div class="word-item">
+                            <label>Mi mama cocino pastel.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Mi mamá cocinó pastel">
+                        </div>
+                        <div class="word-item">
+                            <label>¿Como te llamas?</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="¿Cómo te llamas?">
+                        </div>
+                        <div class="word-item">
+                            <label>Estudiamos geografia.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Estudiamos geografía">
+                        </div>
+                        <div class="word-item">
+                            <label>Tu libro esta aqui.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Tu libro está aquí">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disortografía 5° Básico - Guía 2">
+                <h3>Guía 2: Disortografía - 5° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Ortografía literal, h muda, x, tilde y homófonos.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Escribe con H donde corresponda</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>_ _ orno</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ onra</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ ierro</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ ierda</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                        <div class="word-item">
+                            <label>_ _ echar a perder</label>
+                            <input type="text" class="input-field" placeholder="Escribe h si corresponde" data-correct="h">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Palabras que se confunden - Marca la opción correcta</h4>
+                    <div class="options-group">
+                        <div class="option">
+                            <input type="radio" name="confusion1" value="hecho" data-correct="true"> hecho la tarea
+                            <input type="radio" name="confusion1" value="echo"> echo la tarea
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="confusion2" value="hay" data-correct="true"> No hay comida
+                            <input type="radio" name="confusion2" value="ay"> No ay comida
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="confusion3" value="baya" data-correct="true"> La baya del árbol
+                            <input type="radio" name="confusion3" value="vaya"> La vaya del árbol
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="confusion4" value="ola" data-correct="true"> El viento trae una ola gigante
+                            <input type="radio" name="confusion4" value="hola"> El viento trae una hola gigante
+                        </div>
+                        <div class="option">
+                            <input type="radio" name="confusion5" value="cocer" data-correct="true"> Debo cocer la comida
+                            <input type="radio" name="confusion5" value="coser"> Debo coser la comida
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Coloca tilde donde corresponda</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>El nino vino ayer.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="El niño vino ayer">
+                        </div>
+                        <div class="word-item">
+                            <label>Mi mama cocino muy rico.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Mi mamá cocinó muy rico">
+                        </div>
+                        <div class="word-item">
+                            <label>¿Que quieres comer?</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="¿Qué quieres comer?">
+                        </div>
+                        <div class="word-item">
+                            <label>El pajaro estaba solo.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="El pájaro estaba solo">
+                        </div>
+                        <div class="word-item">
+                            <label>Tu casa es bonita.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Tu casa es bonita">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(5)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-5"></div>
+            
+            <div class="completion-message" id="completion-message-5">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-5"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disortografia', 5)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 6° Básico -->
+        <div id="grade-6" class="activity-content">
+            <!-- Guía 1 -->
+            <div class="activity-section" data-guia="Disortografía 6° Básico - Guía 1">
+                <h3>Guía 1: Disortografía - 6° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Corrección de oraciones, aplicación de reglas complejas y ortografía de uso.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Detecta y corrige los errores</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>Los chikos trajieron sus resivitos.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Los chicos trajeron sus recibos">
+                        </div>
+                        <div class="word-item">
+                            <label>Mi amijo me dijó que iria mañana.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Mi amigo me dijo que iría mañana">
+                        </div>
+                        <div class="word-item">
+                            <label>La jente ase fila en el super.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="La gente hace fila en el súper">
+                        </div>
+                        <div class="word-item">
+                            <label>Yo quisé comprar un esamblaje.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Yo quise comprar un ensamblaje">
+                        </div>
+                        <div class="word-item">
+                            <label>No se donde ubico la direcsión.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="No sé dónde ubico la dirección">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Reescribe el párrafo corrigiendo todo lo necesario</h4>
+                    <p class="instruction">Texto con errores: "Yo me yamo Matias y me gusta muxo la tegnolojia. Ayer isimos un proyecto en grupo i salio exelente. La protesora nos felisito por el treballo."</p>
+                    <textarea class="text-area" placeholder="Escribe el texto corregido aquí..." data-min-words="20"></textarea>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Aplica reglas de acentuación</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>Mi tio vive en Mexico.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Mi tío vive en México">
+                        </div>
+                        <div class="word-item">
+                            <label>Todos estudian para el examen.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Todos estudian para el examen">
+                        </div>
+                        <div class="word-item">
+                            <label>Esta es la cancion que me gusto.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Esta es la canción que me gustó">
+                        </div>
+                        <div class="word-item">
+                            <label>El pajaro volo hacia el arbol.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="El pájaro voló hacia el árbol">
+                        </div>
+                        <div class="word-item">
+                            <label>¿Quien quiere participar?</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="¿Quién quiere participar?">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Guía 2 -->
+            <div class="activity-section" data-guia="Disortografía 6° Básico - Guía 2">
+                <h3>Guía 2: Disortografía - 6° Básico</h3>
+                <div class="objective">
+                    <strong>Objetivo:</strong> Redacción, normas de ortografía y corrección avanzada.
+                </div>
+
+                <div class="exercise">
+                    <h4>1. Corrige las siguientes oraciones</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>Mis compañeros me dijieron que ubieron problemas.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Mis compañeros me dijeron que hubieron problemas">
+                        </div>
+                        <div class="word-item">
+                            <label>Yo crei que la prosima semana avria clases.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Yo creí que la próxima semana habría clases">
+                        </div>
+                        <div class="word-item">
+                            <label>La jente no save respetar la fila.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="La gente no sabe respetar la fila">
+                        </div>
+                        <div class="word-item">
+                            <label>Ellos no benian por falta de trasporte.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="Ellos no venían por falta de transporte">
+                        </div>
+                        <div class="word-item">
+                            <label>La esena del teatro era increible.</label>
+                            <input type="text" class="input-field" placeholder="Escribe corrección" data-correct="La escena del teatro era increíble">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="exercise">
+                    <h4>2. Reescribe el texto corrigiendo todos los errores</h4>
+                    <p class="instruction">Texto con errores: "En la savana avian yirafas que se allavan tomando agua. Unos turista dijieron que berian leones al amanecer. El guia nos esplico todo mui vien."</p>
+                    <textarea class="text-area" placeholder="Escribe el texto corregido aquí..." data-min-words="20"></textarea>
+                </div>
+
+                <div class="exercise">
+                    <h4>3. Agrega tildes necesarias</h4>
+                    <div class="word-list">
+                        <div class="word-item">
+                            <label>El arbol crecio rapido.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="El árbol creció rápido">
+                        </div>
+                        <div class="word-item">
+                            <label>Mi tio escribio un poema.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Mi tío escribió un poema">
+                        </div>
+                        <div class="word-item">
+                            <label>Aun no he terminado la tarea.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Aún no he terminado la tarea">
+                        </div>
+                        <div class="word-item">
+                            <label>Quieres venir conmigo?</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="¿Quieres venir conmigo?">
+                        </div>
+                        <div class="word-item">
+                            <label>Esta musica es hermosa.</label>
+                            <input type="text" class="input-field" placeholder="Escribe con tilde si es necesario" data-correct="Esta música es hermosa">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="submit-btn" onclick="checkAnswers(6)">Enviar Respuestas</button>
+            <div class="feedback" id="feedback-6"></div>
+            
+            <div class="completion-message" id="completion-message-6">
+                <h3>¡Actividad Completada!</h3>
+                <p id="final-score-6"></p>
+                <div class="survey-options">
+                    <button class="survey-btn yes" onclick="goToSurvey('disortografia', 6)">Sí, quiero evaluar</button>
+                    <button class="survey-btn no" onclick="goToHome()">No, volver al inicio</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Cambiar entre grados
+        document.querySelectorAll('.grade-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remover activo de todos los botones
+                document.querySelectorAll('.grade-btn').forEach(b => {
+                    b.classList.remove('active');
+                });
+                
+                // Agregar activo al botón clickeado
+                this.classList.add('active');
+                
+                // Ocultar todos los contenidos
+                document.querySelectorAll('.activity-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // Mostrar contenido del grado seleccionado
+                const grade = this.getAttribute('data-grade');
+                document.getElementById(`grade-${grade}`).classList.add('active');
+            });
+        });
+
+        // Función para seleccionar opciones en ejercicios de emparejamiento
+        function selectOption(element) {
+            // Remover selección de otros elementos en el mismo grupo
+            const parent = element.parentElement;
+            parent.querySelectorAll('.matching-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            
+            // Seleccionar el elemento clickeado
+            element.classList.add('selected');
+        }
+
+        function checkAnswers(grade) {
+            const feedback = document.getElementById(`feedback-${grade}`);
+            const content = document.getElementById(`grade-${grade}`);
+            let allCorrect = true;
+            let errors = [];
+            let totalQuestions = 0;
+            let correctAnswers = 0;
+
+            // Verificar inputs de texto
+            const textInputs = content.querySelectorAll('input[type="text"]');
+            textInputs.forEach((input, index) => {
+                totalQuestions++;
+                const userAnswer = input.value.trim().toLowerCase();
+                const correctAnswer = input.getAttribute('data-correct').toLowerCase();
+                
+                if (userAnswer === correctAnswer) {
+                    input.classList.add('correct');
+                    input.classList.remove('incorrect');
+                    correctAnswers++;
+                } else {
+                    input.classList.add('incorrect');
+                    input.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Ejercicio ${index + 1}: La respuesta correcta es: <span class="correct-answer">${correctAnswer}</span>`);
+                }
+            });
+
+            // Verificar radio buttons
+            const radioGroups = content.querySelectorAll('.options-group');
+            radioGroups.forEach((group, groupIndex) => {
+                const correctOption = group.querySelector('input[data-correct="true"]:checked');
+                const options = group.querySelectorAll('.option');
+                
+                if (correctOption) {
+                    totalQuestions++;
+                    correctAnswers++;
+                    options.forEach(opt => {
+                        if (opt.contains(correctOption)) {
+                            opt.classList.add('correct');
+                            opt.classList.remove('incorrect');
+                        }
+                    });
+                } else {
+                    allCorrect = false;
+                    totalQuestions++;
+                    options.forEach(opt => {
+                        opt.classList.add('incorrect');
+                        opt.classList.remove('correct');
+                    });
+                    errors.push(`Opción ${groupIndex + 1}: No seleccionaste la respuesta correcta`);
+                }
+            });
+
+            // Verificar emparejamientos
+            const matchingGroups = content.querySelectorAll('.matching-container');
+            matchingGroups.forEach((group, groupIndex) => {
+                const matchingItems = group.querySelectorAll('.matching-item');
+                matchingItems.forEach((item, itemIndex) => {
+                    totalQuestions++;
+                    const selectedOption = item.querySelector('.matching-option.selected');
+                    const correctOption = item.querySelector('.matching-option[data-correct]');
+                    
+                    if (selectedOption && selectedOption === correctOption) {
+                        selectedOption.classList.add('correct');
+                        selectedOption.classList.remove('incorrect');
+                        correctAnswers++;
+                    } else {
+                        if (selectedOption) {
+                            selectedOption.classList.add('incorrect');
+                            selectedOption.classList.remove('correct');
+                        }
+                        allCorrect = false;
+                        errors.push(`Emparejamiento ${groupIndex + 1}-${itemIndex + 1}: La respuesta correcta es: <span class="correct-answer">${correctOption.textContent}</span>`);
+                    }
+                });
+            });
+
+            // Verificar textarea
+            const textareas = content.querySelectorAll('textarea');
+            textareas.forEach((textarea, index) => {
+                totalQuestions++;
+                const minWords = parseInt(textarea.getAttribute('data-min-words')) || 10;
+                const wordCount = textarea.value.trim().split(/\s+/).length;
+                
+                if (wordCount >= minWords) {
+                    textarea.classList.add('correct');
+                    textarea.classList.remove('incorrect');
+                    correctAnswers++;
+                } else {
+                    textarea.classList.add('incorrect');
+                    textarea.classList.remove('correct');
+                    allCorrect = false;
+                    errors.push(`Texto ${index + 1}: Necesitas escribir al menos ${minWords} palabras`);
+                }
+            });
+
+            // Calcular porcentaje
+            const porcentaje = totalQuestions > 0 ? Math.round((correctAnswers / totalQuestions) * 100) : 0;
+
+            // Mostrar feedback
+            if (allCorrect) {
+                feedback.innerHTML = `
+                    <strong>¡Excelente! Todas las respuestas son correctas.</strong>
+                    <p>¡Has completado la actividad perfectamente!</p>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                `;
+                feedback.className = 'feedback correct';
+                
+                // Mostrar mensaje de finalización después de 2 segundos
+                setTimeout(() => {
+                    document.getElementById(`completion-message-${grade}`).style.display = 'block';
+                    document.getElementById(`final-score-${grade}`).textContent = `Puntuación: ${correctAnswers}/${totalQuestions} (${porcentaje}%)`;
+                    feedback.scrollIntoView({ behavior: 'smooth' });
+                }, 2000);
+                
+            } else {
+                feedback.innerHTML = `
+                    <strong>¡Oh no! Te equivocaste en algunas respuestas:</strong>
+                    <ul class="error-list">
+                        ${errors.map(error => `<li>${error}</li>`).join('')}
+                    </ul>
+                    <p><strong>Resultado:</strong> ${correctAnswers}/${totalQuestions} correctas (${porcentaje}%)</p>
+                    <p>Revisa las respuestas marcadas en rojo y corrígelas.</p>
+                    <button class="retry-btn" onclick="retryActivity(${grade})">Intentar de nuevo</button>
+                `;
+                feedback.className = 'feedback incorrect';
+            }
+            
+            feedback.style.display = 'block';
+            feedback.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function retryActivity(grade) {
+            const content = document.getElementById(`grade-${grade}`);
+            const feedback = document.getElementById(`feedback-${grade}`);
+            
+            // Limpiar estilos de error
+            const incorrectElements = content.querySelectorAll('.incorrect, .correct');
+            incorrectElements.forEach(element => {
+                element.classList.remove('incorrect', 'correct');
+            });
+            
+            // Limpiar selecciones de emparejamiento
+            const matchingOptions = content.querySelectorAll('.matching-option');
+            matchingOptions.forEach(option => {
+                option.classList.remove('selected', 'correct', 'incorrect');
+            });
+            
+            // Ocultar feedback
+            feedback.style.display = 'none';
+            
+            // Ocultar mensaje de completado
+            document.getElementById(`completion-message-${grade}`).style.display = 'none';
+            
+            // Enfocar el primer elemento incorrecto
+            const firstIncorrect = content.querySelector('.input-field, .option, .text-area');
+            if (firstIncorrect) {
+                firstIncorrect.focus();
+            }
+        }
+
+        function goToSurvey(activity, grade) {
+            // Mapeo de actividades a áreas (ESENCIAL para la base de datos)
+            const areaMap = {
+                'discalculia': 'calculo',
+                'dislexia': 'lectura', 
+                'dislalia': 'lectura',
+                'disgrafia': 'escritura',
+                'disortografia': 'escritura',
+                'ejercicios': 'calculo'
+            };
+            
+            const area = areaMap[activity] || 'general';
+            
+            // CAMBIO AQUÍ: survey.php → survey.html
+            window.location.href = `survey.html?activity=${activity}&area=${area}&grade=${grade}`;
+        }
+
+        function goToHome() {
+            // Ruta CORREGIDA - asumiendo que index.html está en la misma carpeta
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
